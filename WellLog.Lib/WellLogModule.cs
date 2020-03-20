@@ -20,10 +20,6 @@ namespace WellLog.Lib
 
             /* Data Access */
             serviceCollection.AddScoped<ILasLogFileDataAccess, LasLogFileDataAccess>();
-
-            /* Services */
-
-            /* Jobs */
         }
     }
 }
