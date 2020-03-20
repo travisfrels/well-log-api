@@ -36,18 +36,11 @@ namespace WellLog.Lib.Helpers
             return lasSection.MnemonicsLines.FirstOrDefault();
         }
 
-        public static int MnemonicCount(this LasSection lasSection)
-        {
-            if (lasSection == null) { return 0; }
-            if (lasSection.MnemonicsLines == null) { return 0; }
-            return lasSection.MnemonicsLines.Count();
-        }
-
-        public static int AsciiLogDataCount(this LasSection lasSection)
+        public static int EmptyAsciiLogDataLineCount(this LasSection lasSection)
         {
             if (lasSection == null) { return 0; }
             if (lasSection.AsciiLogDataLines == null) { return 0; }
-            return lasSection.AsciiLogDataLines.Count();
+            return lasSection.AsciiLogDataLines.Count(x => x.IsEmpty());
         }
     }
 }
