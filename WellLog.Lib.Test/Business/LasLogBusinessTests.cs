@@ -10,13 +10,18 @@ namespace WellLog.Lib.Test.Business
     public class LasLogBusinessTests
     {
         private Mock<ILasSectionBusiness> _lasSectionBusiness;
+        private Mock<IAsciiLogDataBusiness> _asciiLogDataBusiness;
+        private Mock<IWellInformationBusiness> _wellInformationBusiness;
         private LasLogBusiness _lasLogBusiness;
 
         [SetUp]
         public void PerTestSetup()
         {
             _lasSectionBusiness = new Mock<ILasSectionBusiness>();
-            _lasLogBusiness = new LasLogBusiness(_lasSectionBusiness.Object);
+            _asciiLogDataBusiness = new Mock<IAsciiLogDataBusiness>();
+            _wellInformationBusiness = new Mock<IWellInformationBusiness>();
+
+            _lasLogBusiness = new LasLogBusiness(_lasSectionBusiness.Object, _asciiLogDataBusiness.Object, _wellInformationBusiness.Object);
         }
 
         [Test]

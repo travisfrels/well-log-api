@@ -14,6 +14,8 @@ namespace WellLog.Lib
             serviceCollection.AddScoped<ILasLogBusiness, LasLogBusiness>();
             serviceCollection.AddScoped<ILasSectionBusiness, LasSectionBusiness>();
             serviceCollection.AddScoped<ILasSectionLineBusiness, LasSectionLineBusiness>();
+            serviceCollection.AddScoped<IAsciiLogDataBusiness, AsciiLogDataBusiness>();
+            serviceCollection.AddScoped<IWellInformationBusiness, WellInformationBusiness>();
 
             /* Validators */
             serviceCollection.AddScoped<ILasLogValidator, LasLogValidator>();

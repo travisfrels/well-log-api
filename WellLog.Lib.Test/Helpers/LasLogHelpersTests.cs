@@ -164,5 +164,73 @@ namespace WellLog.Lib.Test.Helpers
             Assert.AreEqual(WELL_ID, withUwiWellId.WellIdentifier());
             Assert.AreEqual(WELL_ID, withApiWellId.WellIdentifier());
         }
+
+        [Test]
+        public void LasLogHelpers_FileVersion_Pass_Null()
+        {
+            LasLog lasLog = null;
+            Assert.AreEqual(LasFileVersion.LAS_2_0, lasLog.FileVersion());
+        }
+
+        [Test]
+        public void LasLogHelpers_FileVersion_Pass_NoSections()
+        {
+            LasLog lasLog = new LasLog();
+            Assert.AreEqual(LasFileVersion.LAS_2_0, lasLog.FileVersion());
+        }
+
+        [Test]
+        public void LasLogHelpers_FileVersion_Pass_NoVersionInfo()
+        {
+            LasLog lasLog = new LasLog { Sections = new LasSection[] { new LasSection() } };
+            Assert.AreEqual(LasFileVersion.LAS_2_0, lasLog.FileVersion());
+        }
+
+        [Test]
+        public void LasLogHelpers_FileVersion_Pass_NoVersionMnemonic()
+        {
+            LasLog lasLog = new LasLog { Sections = new LasSection[] { new LasSection { SectionType = LasSectionType.VersionInformation } } };
+            Assert.AreEqual(LasFileVersion.LAS_2_0, lasLog.FileVersion());
+        }
+
+        [Test]
+        public void LasLogHelpers_FileVersion_Pass_Version12()
+        {
+            LasLog lasLog = new LasLog
+            {
+                Sections = new LasSection[]
+                {
+                    new LasSection
+                    {
+                        SectionType = LasSectionType.VersionInformation,
+                        MnemonicsLines = new LasMnemonicLine[]
+                        {
+                            new LasMnemonicLine{ Mnemonic = "VERS", Data = "1.2" }
+                        }
+                    }
+                }
+            };
+            Assert.AreEqual(LasFileVersion.LAS_1_2, lasLog.FileVersion());
+        }
+
+        [Test]
+        public void LasLogHelpers_FileVersion_Pass_Version20()
+        {
+            LasLog lasLog = new LasLog
+            {
+                Sections = new LasSection[]
+                {
+                    new LasSection
+                    {
+                        SectionType = LasSectionType.VersionInformation,
+                        MnemonicsLines = new LasMnemonicLine[]
+                        {
+                            new LasMnemonicLine{ Mnemonic = "VERS", Data = "2.0" }
+                        }
+                    }
+                }
+            };
+            Assert.AreEqual(LasFileVersion.LAS_2_0, lasLog.FileVersion());
+        }
     }
 }
