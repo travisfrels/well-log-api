@@ -50,17 +50,6 @@ namespace WellLog.Lib.Test.Helpers
             }
         };
 
-        private static readonly LasSection threeChannelCurveSection = new LasSection
-        {
-            SectionType = LasSectionType.CurveInformation,
-            MnemonicsLines = new LasMnemonicLine[]
-            {
-                new LasMnemonicLine { Mnemonic = "DEPTH", Units = "FEET" },
-                new LasMnemonicLine { Mnemonic = "GR", Units = "RAD" },
-                new LasMnemonicLine { Mnemonic = "TEMP", Units = "DEGF" }
-            }
-        };
-
         private static readonly LasSection oneChannelAsciiLogData = new LasSection
         {
             SectionType = LasSectionType.AsciiLogData,
@@ -168,35 +157,33 @@ namespace WellLog.Lib.Test.Helpers
         [Test]
         public void LasLogHelpers_FileVersion_Pass_Null()
         {
-            LasLog lasLog = null;
-            Assert.AreEqual(LasFileVersion.LAS_2_0, lasLog.FileVersion());
+            Assert.AreEqual(LasFileVersion.LAS_2_0, nullLog.FileVersion());
         }
 
         [Test]
         public void LasLogHelpers_FileVersion_Pass_NoSections()
         {
-            LasLog lasLog = new LasLog();
-            Assert.AreEqual(LasFileVersion.LAS_2_0, lasLog.FileVersion());
+            Assert.AreEqual(LasFileVersion.LAS_2_0, noSections.FileVersion());
         }
 
         [Test]
         public void LasLogHelpers_FileVersion_Pass_NoVersionInfo()
         {
-            LasLog lasLog = new LasLog { Sections = new LasSection[] { new LasSection() } };
+            var lasLog = new LasLog { Sections = new LasSection[] { new LasSection() } };
             Assert.AreEqual(LasFileVersion.LAS_2_0, lasLog.FileVersion());
         }
 
         [Test]
         public void LasLogHelpers_FileVersion_Pass_NoVersionMnemonic()
         {
-            LasLog lasLog = new LasLog { Sections = new LasSection[] { new LasSection { SectionType = LasSectionType.VersionInformation } } };
+            var lasLog = new LasLog { Sections = new LasSection[] { new LasSection { SectionType = LasSectionType.VersionInformation } } };
             Assert.AreEqual(LasFileVersion.LAS_2_0, lasLog.FileVersion());
         }
 
         [Test]
         public void LasLogHelpers_FileVersion_Pass_Version12()
         {
-            LasLog lasLog = new LasLog
+            var lasLog = new LasLog
             {
                 Sections = new LasSection[]
                 {
@@ -216,7 +203,7 @@ namespace WellLog.Lib.Test.Helpers
         [Test]
         public void LasLogHelpers_FileVersion_Pass_Version20()
         {
-            LasLog lasLog = new LasLog
+            var lasLog = new LasLog
             {
                 Sections = new LasSection[]
                 {

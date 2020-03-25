@@ -7,8 +7,22 @@ namespace WellLog.Lib.Test.Helpers
     [TestFixture]
     public class LasWellInformationHelpersTests
     {
-        private static readonly LasMnemonicLine uwiLine = new LasMnemonicLine { Mnemonic = "UWI" };
-        private static readonly LasMnemonicLine apiLine = new LasMnemonicLine { Mnemonic = "API" };
+        private static readonly LasMnemonicLine startMnemonicLine = new LasMnemonicLine { Mnemonic = "STRT", Units = "FEET", Data = "100.0", Description = "START DEPTH" };
+        private static readonly LasMnemonicLine stopMnemonicLine = new LasMnemonicLine { Mnemonic = "STOP", Units = "FEET", Data = "101.0", Description = "STOP DEPTH" };
+        private static readonly LasMnemonicLine stepMnemonicLine = new LasMnemonicLine { Mnemonic = "STEP", Units = "FEET", Data = "0.5", Description = "DEPTH STEP" };
+        private static readonly LasMnemonicLine nullMnemonicLine = new LasMnemonicLine { Mnemonic = "NULL", Data = "-999.25", Description = "NULL VALUE" };
+        private static readonly LasMnemonicLine companyMnemonicLine = new LasMnemonicLine { Mnemonic = "COMP", Data = "ANY COMPANY", Description = "COMPANY" };
+        private static readonly LasMnemonicLine wellMnemonicLine = new LasMnemonicLine { Mnemonic = "WELL", Data = "ANY WELL", Description = "WELL NAME" };
+        private static readonly LasMnemonicLine fieldMnemonicLine = new LasMnemonicLine { Mnemonic = "FLD", Data = "ANY FIELD", Description = "FIELD NAME" };
+        private static readonly LasMnemonicLine locationMnemonicLine = new LasMnemonicLine { Mnemonic = "LOC", Data = "ANY LOCATION", Description = "LOCATION" };
+        private static readonly LasMnemonicLine provinceMnemonicLine = new LasMnemonicLine { Mnemonic = "PROV", Data = "ANY PROVINCE", Description = "PROVINCE" };
+        private static readonly LasMnemonicLine countyMnemonicLine = new LasMnemonicLine { Mnemonic = "CNTY", Data = "ANY COUNTY", Description = "COUNTY" };
+        private static readonly LasMnemonicLine stateMnemonicLine = new LasMnemonicLine { Mnemonic = "STAT", Data = "ANY STATE", Description = "STATE" };
+        private static readonly LasMnemonicLine countryMnemonicLine = new LasMnemonicLine { Mnemonic = "CTRY", Data = "ANY COUNTRY", Description = "COUNTRY" };
+        private static readonly LasMnemonicLine serviceCompanyMnemonicLine = new LasMnemonicLine { Mnemonic = "SRVC", Data = "ANY SERVICE COMPANY", Description = "SERVICE COMPANY" };
+        private static readonly LasMnemonicLine dateMnemonicLine = new LasMnemonicLine { Mnemonic = "DATE", Data = "2020-03-25", Description = "DATE LOGGED" };
+        private static readonly LasMnemonicLine uwiMnemonicLine = new LasMnemonicLine { Mnemonic = "UWI", Data = "123456789012", Description = "UNIQUE WELL ID" };
+        private static readonly LasMnemonicLine apiMnemonicLine = new LasMnemonicLine { Mnemonic = "API", Data = "123456789012", Description = "API NUMBER" };
 
         private static readonly LasSection nullSection = null;
         private static readonly LasSection emptySection = new LasSection();
@@ -16,22 +30,22 @@ namespace WellLog.Lib.Test.Helpers
         {
             MnemonicsLines = new LasMnemonicLine[]
             {
-                new LasMnemonicLine { Mnemonic = "STRT" },
-                new LasMnemonicLine { Mnemonic = "STOP" },
-                new LasMnemonicLine { Mnemonic = "STEP" },
-                new LasMnemonicLine { Mnemonic = "NULL" },
-                new LasMnemonicLine { Mnemonic = "COMP" },
-                new LasMnemonicLine { Mnemonic = "WELL" },
-                new LasMnemonicLine { Mnemonic = "FLD" },
-                new LasMnemonicLine { Mnemonic = "LOC" },
-                new LasMnemonicLine { Mnemonic = "PROV" },
-                new LasMnemonicLine { Mnemonic = "CNTY" },
-                new LasMnemonicLine { Mnemonic = "STAT" },
-                new LasMnemonicLine { Mnemonic = "CTRY" },
-                new LasMnemonicLine { Mnemonic = "SRVC" },
-                new LasMnemonicLine { Mnemonic = "DATE" },
-                uwiLine,
-                apiLine
+                startMnemonicLine,
+                stopMnemonicLine,
+                stepMnemonicLine,
+                nullMnemonicLine,
+                companyMnemonicLine,
+                wellMnemonicLine,
+                fieldMnemonicLine,
+                locationMnemonicLine,
+                provinceMnemonicLine,
+                countyMnemonicLine,
+                stateMnemonicLine,
+                countryMnemonicLine,
+                serviceCompanyMnemonicLine,
+                dateMnemonicLine,
+                uwiMnemonicLine,
+                apiMnemonicLine
             }
         };
 
@@ -180,11 +194,91 @@ namespace WellLog.Lib.Test.Helpers
         }
 
         [Test]
+        public void LasWellInformationHelpers_GetCompanyMnemonic_Pass()
+        {
+            Assert.IsNull(nullSection.GetCompanyMnemonic());
+            Assert.IsNull(emptySection.GetCompanyMnemonic());
+            Assert.AreSame(companyMnemonicLine, wellInformationSection.GetCompanyMnemonic());
+        }
+
+        [Test]
+        public void LasWellInformationHelpers_GetWellMnemonic_Pass()
+        {
+            Assert.IsNull(nullSection.GetWellMnemonic());
+            Assert.IsNull(emptySection.GetWellMnemonic());
+            Assert.AreSame(wellMnemonicLine, wellInformationSection.GetWellMnemonic());
+        }
+
+        [Test]
+        public void LasWellInformationHelpers_GetFieldMnemonic_Pass()
+        {
+            Assert.IsNull(nullSection.GetFieldMnemonic());
+            Assert.IsNull(emptySection.GetFieldMnemonic());
+            Assert.AreSame(fieldMnemonicLine, wellInformationSection.GetFieldMnemonic());
+        }
+
+        [Test]
+        public void LasWellInformationHelpers_GetLocationMnemonic_Pass()
+        {
+            Assert.IsNull(nullSection.GetLocationMnemonic());
+            Assert.IsNull(emptySection.GetLocationMnemonic());
+            Assert.AreSame(locationMnemonicLine, wellInformationSection.GetLocationMnemonic());
+        }
+
+        [Test]
+        public void LasWellInformationHelpers_GetProvinceMnemonic_Pass()
+        {
+            Assert.IsNull(nullSection.GetProvinceMnemonic());
+            Assert.IsNull(emptySection.GetProvinceMnemonic());
+            Assert.AreSame(provinceMnemonicLine, wellInformationSection.GetProvinceMnemonic());
+        }
+
+        [Test]
+        public void LasWellInformationHelpers_GetCountyMnemonic_Pass()
+        {
+            Assert.IsNull(nullSection.GetCountyMnemonic());
+            Assert.IsNull(emptySection.GetCountyMnemonic());
+            Assert.AreSame(countyMnemonicLine, wellInformationSection.GetCountyMnemonic());
+        }
+
+        [Test]
+        public void LasWellInformationHelpers_GetStateMnemonic_Pass()
+        {
+            Assert.IsNull(nullSection.GetStateMnemonic());
+            Assert.IsNull(emptySection.GetStateMnemonic());
+            Assert.AreSame(stateMnemonicLine, wellInformationSection.GetStateMnemonic());
+        }
+
+        [Test]
+        public void LasWellInformationHelpers_GetCountryMnemonic_Pass()
+        {
+            Assert.IsNull(nullSection.GetCountryMnemonic());
+            Assert.IsNull(emptySection.GetCountryMnemonic());
+            Assert.AreSame(countryMnemonicLine, wellInformationSection.GetCountryMnemonic());
+        }
+
+        [Test]
+        public void LasWellInformationHelpers_GetServiceCompanyMnemonic_Pass()
+        {
+            Assert.IsNull(nullSection.GetServiceCompanyMnemonic());
+            Assert.IsNull(emptySection.GetServiceCompanyMnemonic());
+            Assert.AreSame(serviceCompanyMnemonicLine, wellInformationSection.GetServiceCompanyMnemonic());
+        }
+
+        [Test]
+        public void LasWellInformationHelpers_GetDateMnemonic_Pass()
+        {
+            Assert.IsNull(nullSection.GetDateMnemonic());
+            Assert.IsNull(emptySection.GetDateMnemonic());
+            Assert.AreSame(dateMnemonicLine, wellInformationSection.GetDateMnemonic());
+        }
+
+        [Test]
         public void LasWellInformationHelpers_GetUwiMnemonic_Pass()
         {
             Assert.IsNull(nullSection.GetUwiMnemonic());
             Assert.IsNull(emptySection.GetUwiMnemonic());
-            Assert.AreSame(uwiLine, wellInformationSection.GetUwiMnemonic());
+            Assert.AreSame(uwiMnemonicLine, wellInformationSection.GetUwiMnemonic());
         }
 
         [Test]
@@ -192,7 +286,7 @@ namespace WellLog.Lib.Test.Helpers
         {
             Assert.IsNull(nullSection.GetApiMnemonic());
             Assert.IsNull(emptySection.GetApiMnemonic());
-            Assert.AreSame(apiLine, wellInformationSection.GetApiMnemonic());
+            Assert.AreSame(apiMnemonicLine, wellInformationSection.GetApiMnemonic());
         }
     }
 }
