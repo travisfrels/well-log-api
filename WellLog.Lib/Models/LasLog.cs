@@ -12,6 +12,9 @@ namespace WellLog.Lib.Models
         [Key]
         public string WellIdentifier => this.WellIdentifier();
 
+        public bool UsesLineWrap => this.UsesLineWrap();
+        public LasFileVersion FileVersion => this.FileVersion();
+
         public LasSection VersionInformation => this.GetSection(LasSectionType.VersionInformation);
         public LasSection WellInformation => this.GetSection(LasSectionType.WellInformation);
         public LasSection CurveInformation => this.GetSection(LasSectionType.CurveInformation);

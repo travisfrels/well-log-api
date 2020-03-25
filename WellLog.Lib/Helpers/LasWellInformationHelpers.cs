@@ -120,5 +120,55 @@ namespace WellLog.Lib.Helpers
         {
             return lasSection.GetMnemonic(MNEM_API);
         }
+
+        public static LasMnemonicLine GetCompanyMnemonic(this LasSection lasSection)
+        {
+            return lasSection.GetMnemonic(MNEM_COMP);
+        }
+
+        public static LasMnemonicLine GetWellMnemonic(this LasSection lasSection)
+        {
+            return lasSection.GetMnemonic(MNEM_WELL);
+        }
+
+        public static LasMnemonicLine GetFieldMnemonic(this LasSection lasSection)
+        {
+            return lasSection.GetMnemonic(MNEM_FLD);
+        }
+
+        public static LasMnemonicLine GetLocationMnemonic(this LasSection lasSection)
+        {
+            return lasSection.GetMnemonic(MNEM_LOC);
+        }
+
+        public static LasMnemonicLine GetProvinceMnemonic(this LasSection lasSection)
+        {
+            return lasSection.GetMnemonic(MNEM_PROV);
+        }
+
+        public static LasMnemonicLine GetCountyMnemonic(this LasSection lasSection)
+        {
+            return lasSection.GetMnemonic(MNEM_CNTY);
+        }
+
+        public static LasMnemonicLine GetStateMnemonic(this LasSection lasSection)
+        {
+            return lasSection.GetMnemonic(MNEM_STAT);
+        }
+
+        public static LasMnemonicLine GetCountryMnemonic(this LasSection lasSection)
+        {
+            return lasSection.GetMnemonic(MNEM_CTRY);
+        }
+
+        public static LasMnemonicLine GetServiceCompanyMnemonic(this LasSection lasSection)
+        {
+            return lasSection.GetMnemonic(MNEM_SRVC);
+        }
+
+        public static LasMnemonicLine GetDateMnemonic(this LasSection lasSection)
+        {
+            return lasSection.GetMnemonic(MNEM_DATE);
+        }
     }
 }

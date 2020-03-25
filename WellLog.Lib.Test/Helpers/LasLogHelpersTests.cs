@@ -50,17 +50,6 @@ namespace WellLog.Lib.Test.Helpers
             }
         };
 
-        private static readonly LasSection threeChannelCurveSection = new LasSection
-        {
-            SectionType = LasSectionType.CurveInformation,
-            MnemonicsLines = new LasMnemonicLine[]
-            {
-                new LasMnemonicLine { Mnemonic = "DEPTH", Units = "FEET" },
-                new LasMnemonicLine { Mnemonic = "GR", Units = "RAD" },
-                new LasMnemonicLine { Mnemonic = "TEMP", Units = "DEGF" }
-            }
-        };
-
         private static readonly LasSection oneChannelAsciiLogData = new LasSection
         {
             SectionType = LasSectionType.AsciiLogData,
@@ -163,6 +152,72 @@ namespace WellLog.Lib.Test.Helpers
             Assert.AreEqual(string.Empty, withNoWellId.WellIdentifier());
             Assert.AreEqual(WELL_ID, withUwiWellId.WellIdentifier());
             Assert.AreEqual(WELL_ID, withApiWellId.WellIdentifier());
+        }
+
+        [Test]
+        public void LasLogHelpers_FileVersion_Pass_Null()
+        {
+            Assert.AreEqual(LasFileVersion.LAS_2_0, nullLog.FileVersion());
+        }
+
+        [Test]
+        public void LasLogHelpers_FileVersion_Pass_NoSections()
+        {
+            Assert.AreEqual(LasFileVersion.LAS_2_0, noSections.FileVersion());
+        }
+
+        [Test]
+        public void LasLogHelpers_FileVersion_Pass_NoVersionInfo()
+        {
+            var lasLog = new LasLog { Sections = new LasSection[] { new LasSection() } };
+            Assert.AreEqual(LasFileVersion.LAS_2_0, lasLog.FileVersion());
+        }
+
+        [Test]
+        public void LasLogHelpers_FileVersion_Pass_NoVersionMnemonic()
+        {
+            var lasLog = new LasLog { Sections = new LasSection[] { new LasSection { SectionType = LasSectionType.VersionInformation } } };
+            Assert.AreEqual(LasFileVersion.LAS_2_0, lasLog.FileVersion());
+        }
+
+        [Test]
+        public void LasLogHelpers_FileVersion_Pass_Version12()
+        {
+            var lasLog = new LasLog
+            {
+                Sections = new LasSection[]
+                {
+                    new LasSection
+                    {
+                        SectionType = LasSectionType.VersionInformation,
+                        MnemonicsLines = new LasMnemonicLine[]
+                        {
+                            new LasMnemonicLine{ Mnemonic = "VERS", Data = "1.2" }
+                        }
+                    }
+                }
+            };
+            Assert.AreEqual(LasFileVersion.LAS_1_2, lasLog.FileVersion());
+        }
+
+        [Test]
+        public void LasLogHelpers_FileVersion_Pass_Version20()
+        {
+            var lasLog = new LasLog
+            {
+                Sections = new LasSection[]
+                {
+                    new LasSection
+                    {
+                        SectionType = LasSectionType.VersionInformation,
+                        MnemonicsLines = new LasMnemonicLine[]
+                        {
+                            new LasMnemonicLine{ Mnemonic = "VERS", Data = "2.0" }
+                        }
+                    }
+                }
+            };
+            Assert.AreEqual(LasFileVersion.LAS_2_0, lasLog.FileVersion());
         }
     }
 }

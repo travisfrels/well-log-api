@@ -11,5 +11,13 @@ namespace WellLog.Lib.Helpers
             if (mnemonics == null) { return false; }
             return mnemonics.Any(x => string.Compare(x, lasMnemonicLine.Mnemonic, true) == 0);
         }
+
+        public static void SwapDataDescription(this LasMnemonicLine lasMnemonicLine)
+        {
+            if (lasMnemonicLine == null) { return; }
+            var temp = lasMnemonicLine.Data;
+            lasMnemonicLine.Data = lasMnemonicLine.Description;
+            lasMnemonicLine.Description = temp;
+        }
     }
 }

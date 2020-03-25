@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using WellLog.Lib.Enumerations;
-using WellLog.Lib.Exceptions;
 using WellLog.Lib.Helpers;
 using WellLog.Lib.Models;
 
@@ -12,37 +10,14 @@ namespace WellLog.Lib.Business
     public class LasLogBusiness : ILasLogBusiness
     {
         private readonly ILasSectionBusiness _lasSectionBusiness;
+        private readonly IAsciiLogDataBusiness _asciiLogDataBusiness;
+        private readonly IWellInformationBusiness _wellInformationBusiness;
 
-        public LasLogBusiness(ILasSectionBusiness lasSectionBusiness)
+        public LasLogBusiness(ILasSectionBusiness lasSectionBusiness, IAsciiLogDataBusiness asciiLogDataBusiness, IWellInformationBusiness wellInformationBusiness)
         {
             _lasSectionBusiness = lasSectionBusiness;
-        }
-
-        private void UnWrapAsciiLogData(LasLog lasLog)
-        {
-            if (!lasLog.UsesLineWrap()) { return; }
-
-            var asciiLogDataSection = lasLog.GetSection(LasSectionType.AsciiLogData);
-            if (asciiLogDataSection == null) { return; }
-
-            var asciiLogDataLines = new List<LasAsciiLogDataLine>();
-            List<string> lineValues = null;
-            foreach (var line in asciiLogDataSection.AsciiLogDataLines)
-            {
-                var valueCount = line.Values.Count();
-                if (valueCount < 1) { continue; }
-                if (valueCount == 1)
-                {
-                    if (lineValues != null) { asciiLogDataLines.Add(new LasAsciiLogDataLine { Values = lineValues.ToArray() }); }
-                    lineValues = new List<string>();
-                }
-
-                if (lineValues == null) { throw new LasLogFormatException("Invalid line wrapping.  In wrap mode, the index channel must be on its own line.", lasLog); }
-                lineValues.AddRange(line.Values);
-            }
-            if (lineValues != null) { asciiLogDataLines.Add(new LasAsciiLogDataLine { Values = lineValues.ToArray() }); }
-
-            asciiLogDataSection.AsciiLogDataLines = asciiLogDataLines.ToArray();
+            _asciiLogDataBusiness = asciiLogDataBusiness;
+            _wellInformationBusiness = wellInformationBusiness;
         }
 
         public LasLog ReadStream(Stream lasStream)
@@ -66,7 +41,15 @@ namespace WellLog.Lib.Business
             }
             lasLog.Sections = sections.ToArray();
 
-            UnWrapAsciiLogData(lasLog);
+            if (lasLog.UsesLineWrap)
+            {
+                _asciiLogDataBusiness.UnWrapAsciiLogData(lasLog.AsciiLogData);
+            }
+
+            if (lasLog.FileVersion == LasFileVersion.LAS_1_2)
+            {
+                _wellInformationBusiness.FixWellInformation(lasLog.WellInformation);
+            }
 
             return lasLog;
         }

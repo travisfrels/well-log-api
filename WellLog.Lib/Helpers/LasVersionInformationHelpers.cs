@@ -17,5 +17,10 @@ namespace WellLog.Lib.Helpers
         {
             return lasSection.HasMnemonic(MNEM_WRAP);
         }
+
+        public static LasMnemonicLine GetVersionMnemonic(this LasSection lasSection)
+        {
+            return lasSection.GetMnemonic(MNEM_VERS);
+        }
     }
 }
