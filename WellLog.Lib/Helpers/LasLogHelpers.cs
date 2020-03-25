@@ -1,6 +1,6 @@
-﻿using WellLog.Lib.Enumerations;
+﻿using System.Linq;
+using WellLog.Lib.Enumerations;
 using WellLog.Lib.Models;
-using System.Linq;
 
 namespace WellLog.Lib.Helpers
 {
@@ -8,6 +8,7 @@ namespace WellLog.Lib.Helpers
     {
         private const string MNEM_WRAP = "WRAP";
         private const string WRAP_YES = "YES";
+        private const string LAS_VERSION_1_2 = "1.2";
 
         public static bool HasSection(this LasLog lasLog, LasSectionType lasSectionType)
         {
@@ -76,6 +77,17 @@ namespace WellLog.Lib.Helpers
             if (apiMnemonic != null) { return apiMnemonic.Data; }
 
             return string.Empty;
+        }
+
+        public static LasFileVersion FileVersion(this LasLog lasLog)
+        {
+            if (lasLog == null) { return LasFileVersion.LAS_2_0; }
+
+            var versionMnemonic = lasLog.VersionInformation.GetVersionMnemonic();
+            if (versionMnemonic == null) { return LasFileVersion.LAS_2_0; }
+
+            if (string.Compare(versionMnemonic.Data, LAS_VERSION_1_2, true) == 0) { return LasFileVersion.LAS_1_2; }
+            return LasFileVersion.LAS_2_0;
         }
     }
 }
