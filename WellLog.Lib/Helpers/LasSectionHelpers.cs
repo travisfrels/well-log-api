@@ -1,5 +1,6 @@
 ﻿using WellLog.Lib.Models;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace WellLog.Lib.Helpers
 {
@@ -41,6 +42,50 @@ namespace WellLog.Lib.Helpers
             if (lasSection == null) { return 0; }
             if (lasSection.AsciiLogDataLines == null) { return 0; }
             return lasSection.AsciiLogDataLines.Count(x => x.IsEmpty());
+        }
+
+        public static int MaxMnemonicWidth(this IEnumerable<LasMnemonicLine> mnemonicLines)
+        {
+            if (mnemonicLines == null) { return 0; }
+            if (!mnemonicLines.Any()) { return 0; }
+
+            var validMnemonicLines = mnemonicLines.Where(x => !string.IsNullOrEmpty(x.Mnemonic));
+            if (!validMnemonicLines.Any()) { return 0; }
+
+            return validMnemonicLines.Max(x => x.Mnemonic.Length);
+        }
+
+        public static int MaxUnitsWidth(this IEnumerable<LasMnemonicLine> mnemonicLines)
+        {
+            if (mnemonicLines == null) { return 0; }
+            if (!mnemonicLines.Any()) { return 0; }
+
+            var validMnemonicLines = mnemonicLines.Where(x => !string.IsNullOrEmpty(x.Units));
+            if (!validMnemonicLines.Any()) { return 0; }
+
+            return validMnemonicLines.Max(x => x.Units.Length);
+        }
+
+        public static int MaxDataWidth(this IEnumerable<LasMnemonicLine> mnemonicLines)
+        {
+            if (mnemonicLines == null) { return 0; }
+            if (!mnemonicLines.Any()) { return 0; }
+
+            var validMnemonicLines = mnemonicLines.Where(x => !string.IsNullOrEmpty(x.Data));
+            if (!validMnemonicLines.Any()) { return 0; }
+
+            return validMnemonicLines.Max(x => x.Data.Length);
+        }
+
+        public static int MaxDescriptionWidth(this IEnumerable<LasMnemonicLine> mnemonicLines)
+        {
+            if (mnemonicLines == null) { return 0; }
+            if (!mnemonicLines.Any()) { return 0; }
+
+            var validMnemonicLines = mnemonicLines.Where(x => !string.IsNullOrEmpty(x.Description));
+            if (!validMnemonicLines.Any()) { return 0; }
+
+            return validMnemonicLines.Max(x => x.Description.Length);
         }
     }
 }
