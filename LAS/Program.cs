@@ -30,6 +30,8 @@ namespace LAS
 
                 var lasLogPrinter = serviceProvider.GetService<ILasLogPrinter>();
                 lasLogPrinter.PrintLasLog(lasLog, validationErrors);
+
+                lasLogFileDataAccess.Write($"{lasLog.WellIdentifier}.LAS", lasLog);
             }
             catch (Exception ex)
             {

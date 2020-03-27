@@ -1,5 +1,5 @@
-﻿using WellLog.Lib.Models;
-using System.Linq;
+﻿using System.Linq;
+using WellLog.Lib.Models;
 
 namespace WellLog.Lib.Helpers
 {
@@ -18,6 +18,18 @@ namespace WellLog.Lib.Helpers
             var temp = lasMnemonicLine.Data;
             lasMnemonicLine.Data = lasMnemonicLine.Description;
             lasMnemonicLine.Description = temp;
+        }
+
+        public static string GetLasLine(this LasMnemonicLine lasMnemonicLine, int mnemonicWidth, int unitWidth, int dataWidth)
+        {
+            return string.Format
+                (
+                    " {0}.{1} {2}:{3}",
+                    lasMnemonicLine.Mnemonic.PadRight(mnemonicWidth),
+                    lasMnemonicLine.Units.PadRight(unitWidth),
+                    lasMnemonicLine.Data.PadRight(dataWidth),
+                    lasMnemonicLine.Description
+                );
         }
     }
 }

@@ -1,11 +1,13 @@
 ﻿using Moq;
 using NUnit.Framework;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
 using WellLog.Lib.Business;
 using WellLog.Lib.Enumerations;
 using WellLog.Lib.Exceptions;
+using WellLog.Lib.Models;
 
 namespace WellLog.Lib.Test.Business
 {
@@ -253,6 +255,191 @@ namespace WellLog.Lib.Test.Business
             var sectionInformation = "BLAH BLAH BLAH\r\n";
             var lasStream = StreamFromLasLine(sectionInformation);
             Assert.Throws<LasStreamException>(() => { _lasSectionBusiness.ReadSection(lasStream); });
+        }
+
+        [Test]
+        public void LasSectionBusiness_GetMnemonicSectionLabel_Fail_MnemonicWidthLessThanZero()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => _lasSectionBusiness.GetMnemonicSectionLabel(-1, 1, 1));
+        }
+
+        [Test]
+        public void LasSectionBusiness_GetMnemonicSectionLabel_Fail_UnitWidthLessThanZero()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => _lasSectionBusiness.GetMnemonicSectionLabel(1, -1, 1));
+        }
+
+        [Test]
+        public void LasSectionBusiness_GetMnemonicSectionLabel_Fail_DataWidthLessThanZero()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => _lasSectionBusiness.GetMnemonicSectionLabel(1, 1, -1));
+        }
+
+        [Test]
+        public void LasSectionBusiness_GetMnemonicSectionLabel_Pass()
+        {
+            Assert.AreEqual("#MNEM  .UNITS  DATA  :DESCRIPTION", _lasSectionBusiness.GetMnemonicSectionLabel(6, 6, 6));
+        }
+
+        [Test]
+        public void LasSectionBusiness_WriteMnemonicSection_Pass_NullStream()
+        {
+            Assert.DoesNotThrow(() => { _lasSectionBusiness.WriteMnemonicSection(null, new LasMnemonicLine[0]); });
+        }
+
+        [Test]
+        public void LasSectionBusiness_WriteMnemonicSection_Pass_NullMnemonicLines()
+        {
+            var lasStream = new MemoryStream();
+            _lasSectionBusiness.WriteMnemonicSection(lasStream, null);
+            Assert.AreEqual(0, lasStream.Length);
+        }
+
+        [Test]
+        public void LasSectionBusiness_WriteMnemonicSection_Pass_EmptyMnemonicLines()
+        {
+            var lasStream = new MemoryStream();
+            _lasSectionBusiness.WriteMnemonicSection(lasStream, new LasMnemonicLine[0]);
+            Assert.AreEqual(0, lasStream.Length);
+        }
+
+        [Test]
+        public void LasSectionBusiness_WriteMnemonicSection_Pass()
+        {
+            var lasStream = new MemoryStream();
+            var mnemonicLines = new LasMnemonicLine[]
+            {
+                new LasMnemonicLine{ Mnemonic = "MNEM", Units = "UNITS", Data = "DATA", Description = "DESCRIPTION" }
+            };
+
+            _lasSectionBusiness.WriteMnemonicSection(lasStream, mnemonicLines);
+            Assert.Less(0, lasStream.Length);
+        }
+
+        [Test]
+        public void LasSectionBusiness_WriteAsciiLogDataSection_Pass_NullStream()
+        {
+            Assert.DoesNotThrow(() => { _lasSectionBusiness.WriteAsciiLogDataSection(null, new LasAsciiLogDataLine[0]); });
+        }
+
+        [Test]
+        public void LasSectionBusiness_WriteAsciiLogDataSection_Pass_NullAsciiLogDataLines()
+        {
+            var lasStream = new MemoryStream();
+            _lasSectionBusiness.WriteMnemonicSection(lasStream, null);
+            Assert.AreEqual(0, lasStream.Length);
+        }
+
+        [Test]
+        public void LasSectionBusiness_WriteAsciiLogDataSection_Pass_EmptyAsciiLogDataLines()
+        {
+            var lasStream = new MemoryStream();
+            _lasSectionBusiness.WriteAsciiLogDataSection(lasStream, new LasAsciiLogDataLine[0]);
+            Assert.AreEqual(0, lasStream.Length);
+        }
+
+        [Test]
+        public void LasSectionBusiness_WriteAsciiLogDataSection_Pass()
+        {
+            var lasStream = new MemoryStream();
+            var asciiLogDataLines = new LasAsciiLogDataLine[]
+            {
+                new LasAsciiLogDataLine { Values = new string[] { "-999.25", "-999.25", "-999.25" } }
+            };
+
+            _lasSectionBusiness.WriteAsciiLogDataSection(lasStream, asciiLogDataLines);
+            Assert.Less(0, lasStream.Length);
+        }
+
+        [Test]
+        public void LasSectionBusiness_WriteOtherSection_Pass_NullStream()
+        {
+            Assert.DoesNotThrow(() => { _lasSectionBusiness.WriteOtherSection(null, new string[] { "blah", "blah", "blah" }); });
+        }
+
+        [Test]
+        public void LasSectionBusiness_WriteOtherSection_Pass_NullLasLines()
+        {
+            var lasStream = new MemoryStream();
+            _lasSectionBusiness.WriteOtherSection(lasStream, null);
+            Assert.AreEqual(0, lasStream.Length);
+        }
+
+        [Test]
+        public void LasSectionBusiness_WriteOtherSection_Pass_EmptyLasLines()
+        {
+            var lasStream = new MemoryStream();
+            _lasSectionBusiness.WriteOtherSection(lasStream, new string[0]);
+            Assert.AreEqual(0, lasStream.Length);
+        }
+
+        [Test]
+        public void LasSectionBusiness_WriteOtherSection_Pass()
+        {
+            var lasStream = new MemoryStream();
+
+            _lasSectionBusiness.WriteOtherSection(lasStream, new string[] { "blah", "blah", "blah" });
+            Assert.Less(0, lasStream.Length);
+        }
+
+        [Test]
+        public void LasSectionBusiness_WriteSection_Pass_NullStream()
+        {
+            Assert.DoesNotThrow(() => { _lasSectionBusiness.WriteSection(null, new LasSection()); });
+        }
+
+        [Test]
+        public void LasSectionBusiness_WriteSection_Pass_NullLasSection()
+        {
+            Assert.DoesNotThrow(() => { _lasSectionBusiness.WriteSection(new MemoryStream(), null); });
+        }
+
+        [Test]
+        public void LasSectionBusiness_WriteSection_Pass_VersionInformation()
+        {
+            var lasStream = new MemoryStream();
+            _lasSectionBusiness.WriteSection(lasStream, new LasSection { SectionType = LasSectionType.VersionInformation });
+            Assert.Less(0, lasStream.Length);
+        }
+
+        [Test]
+        public void LasSectionBusiness_WriteSection_Pass_WellInformation()
+        {
+            var lasStream = new MemoryStream();
+            _lasSectionBusiness.WriteSection(lasStream, new LasSection { SectionType = LasSectionType.WellInformation });
+            Assert.Less(0, lasStream.Length);
+        }
+
+        [Test]
+        public void LasSectionBusiness_WriteSection_Pass_CurveInformation()
+        {
+            var lasStream = new MemoryStream();
+            _lasSectionBusiness.WriteSection(lasStream, new LasSection { SectionType = LasSectionType.CurveInformation });
+            Assert.Less(0, lasStream.Length);
+        }
+
+        [Test]
+        public void LasSectionBusiness_WriteSection_Pass_ParameterInformation()
+        {
+            var lasStream = new MemoryStream();
+            _lasSectionBusiness.WriteSection(lasStream, new LasSection { SectionType = LasSectionType.ParameterInformation });
+            Assert.Less(0, lasStream.Length);
+        }
+
+        [Test]
+        public void LasSectionBusiness_WriteSection_Pass_OtherInformation()
+        {
+            var lasStream = new MemoryStream();
+            _lasSectionBusiness.WriteSection(lasStream, new LasSection { SectionType = LasSectionType.OtherInformation });
+            Assert.Less(0, lasStream.Length);
+        }
+
+        [Test]
+        public void LasSectionBusiness_WriteSection_Pass_AsciiLogData()
+        {
+            var lasStream = new MemoryStream();
+            _lasSectionBusiness.WriteSection(lasStream, new LasSection { SectionType = LasSectionType.AsciiLogData });
+            Assert.Less(0, lasStream.Length);
         }
     }
 }

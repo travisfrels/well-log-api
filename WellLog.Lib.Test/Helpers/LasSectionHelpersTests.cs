@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System.Collections.Generic;
 using WellLog.Lib.Helpers;
 using WellLog.Lib.Models;
 
@@ -92,6 +93,153 @@ namespace WellLog.Lib.Test.Helpers
             Assert.AreEqual(0, emptySection.EmptyAsciiLogDataLineCount());
             Assert.AreEqual(0, asciiLogDataSection.EmptyAsciiLogDataLineCount());
             Assert.AreEqual(1, asciiLogDataSectionWithEmptyLine.EmptyAsciiLogDataLineCount());
+        }
+
+        [Test]
+        public void LasSectionhelpers_MaxMnemonicWidth_Pass_NullEnumerable()
+        {
+            IEnumerable<LasMnemonicLine> mnemonicLines = null;
+            Assert.AreEqual(0, mnemonicLines.MaxMnemonicWidth());
+        }
+
+        [Test]
+        public void LasSectionhelpers_MaxMnemonicWidth_Pass_EmptyEnumerable()
+        {
+            var mnemonicLines = new LasMnemonicLine[0];
+            Assert.AreEqual(0, mnemonicLines.MaxMnemonicWidth());
+        }
+
+        [Test]
+        public void LasSectionhelpers_MaxMnemonicWidth_Pass_NoMnemonic()
+        {
+            var mnemonicLines = new LasMnemonicLine[] { new LasMnemonicLine() };
+            Assert.AreEqual(0, mnemonicLines.MaxMnemonicWidth());
+        }
+
+        [Test]
+        public void LasSectionhelpers_MaxMnemonicWidth_Pass_EmptyMnemonic()
+        {
+            var mnemonicLines = new LasMnemonicLine[] { new LasMnemonicLine { Mnemonic = string.Empty } };
+            Assert.AreEqual(0, mnemonicLines.MaxMnemonicWidth());
+        }
+
+        [Test]
+        public void LasSectionhelpers_MaxMnemonicWidth_Pass()
+        {
+            var mnemonicLines = new LasMnemonicLine[] { new LasMnemonicLine { Mnemonic = "MNEM" } };
+            Assert.AreEqual(4, mnemonicLines.MaxMnemonicWidth());
+        }
+
+        [Test]
+        public void LasSectionhelpers_MaxUnitsWidth_Pass_NullEnumerable()
+        {
+            IEnumerable<LasMnemonicLine> mnemonicLines = null;
+            Assert.AreEqual(0, mnemonicLines.MaxUnitsWidth());
+        }
+
+        [Test]
+        public void LasSectionhelpers_MaxUnitsWidth_Pass_EmptyEnumerable()
+        {
+            var mnemonicLines = new LasMnemonicLine[0];
+            Assert.AreEqual(0, mnemonicLines.MaxUnitsWidth());
+        }
+
+        [Test]
+        public void LasSectionhelpers_MaxUnitsWidth_Pass_NoUnits()
+        {
+            var mnemonicLines = new LasMnemonicLine[] { new LasMnemonicLine() };
+            Assert.AreEqual(0, mnemonicLines.MaxUnitsWidth());
+        }
+
+        [Test]
+        public void LasSectionhelpers_MaxUnitsWidth_Pass_EmptyUnits()
+        {
+            var mnemonicLines = new LasMnemonicLine[] { new LasMnemonicLine { Units = string.Empty } };
+            Assert.AreEqual(0, mnemonicLines.MaxUnitsWidth());
+        }
+
+        [Test]
+        public void LasSectionhelpers_MaxUnitsWidth_Pass()
+        {
+            var mnemonicLines = new LasMnemonicLine[] { new LasMnemonicLine { Units = "UNIT" } };
+            Assert.AreEqual(4, mnemonicLines.MaxUnitsWidth());
+        }
+
+        [Test]
+        public void LasSectionhelpers_MaxDataWidth_Pass_NullEnumerable()
+        {
+            IEnumerable<LasMnemonicLine> mnemonicLines = null;
+            Assert.AreEqual(0, mnemonicLines.MaxDataWidth());
+        }
+
+        [Test]
+        public void LasSectionhelpers_MaxDataWidth_Pass_EmptyEnumerable()
+        {
+            var mnemonicLines = new LasMnemonicLine[0];
+            Assert.AreEqual(0, mnemonicLines.MaxDataWidth());
+        }
+
+        [Test]
+        public void LasSectionhelpers_MaxDataWidth_Pass_NoData()
+        {
+            var mnemonicLines = new LasMnemonicLine[] { new LasMnemonicLine() };
+            Assert.AreEqual(0, mnemonicLines.MaxDataWidth());
+        }
+
+        [Test]
+        public void LasSectionhelpers_MaxDataWidth_Pass_EmptyData()
+        {
+            var mnemonicLines = new LasMnemonicLine[] { new LasMnemonicLine { Data = string.Empty } };
+            Assert.AreEqual(0, mnemonicLines.MaxDataWidth());
+        }
+
+        [Test]
+        public void LasSectionhelpers_MaxDataWidth_Pass()
+        {
+            var mnemonicLines = new LasMnemonicLine[] { new LasMnemonicLine { Data = "DATA" } };
+            Assert.AreEqual(4, mnemonicLines.MaxDataWidth());
+        }
+
+        [Test]
+        public void LasSectionhelpers_MaxValueWidth_Pass_NullEnumerable()
+        {
+            IEnumerable<LasAsciiLogDataLine> asciiLogDataLines = null;
+            Assert.AreEqual(0, asciiLogDataLines.MaxValueWidth());
+        }
+
+        [Test]
+        public void LasSectionhelpers_MaxValueWidth_Pass_EmptyEnumerable()
+        {
+            var asciiLogDataLines = new LasAsciiLogDataLine[0];
+            Assert.AreEqual(0, asciiLogDataLines.MaxValueWidth());
+        }
+
+        [Test]
+        public void LasSectionhelpers_MaxValueWidth_Pass_NullValuesArray()
+        {
+            var asciiLogDataLines = new LasAsciiLogDataLine[] { new LasAsciiLogDataLine() };
+            Assert.AreEqual(0, asciiLogDataLines.MaxValueWidth());
+        }
+
+        [Test]
+        public void LasSectionhelpers_MaxValueWidth_Pass_EmptyValuesArray()
+        {
+            var asciiLogDataLines = new LasAsciiLogDataLine[] { new LasAsciiLogDataLine { Values = new string[0] } };
+            Assert.AreEqual(0, asciiLogDataLines.MaxValueWidth());
+        }
+
+        [Test]
+        public void LasSectionhelpers_MaxValueWidth_Pass_ValuesArrayHasNullOrEmptyString()
+        {
+            var asciiLogDataLines = new LasAsciiLogDataLine[] { new LasAsciiLogDataLine { Values = new string[] { null, string.Empty } } };
+            Assert.AreEqual(0, asciiLogDataLines.MaxValueWidth());
+        }
+
+        [Test]
+        public void LasSectionhelpers_MaxValueWidth_Pass()
+        {
+            var asciiLogDataLines = new LasAsciiLogDataLine[] { new LasAsciiLogDataLine { Values = new string[] { "-999.25", "-999.2", "-9999" } } };
+            Assert.AreEqual(7, asciiLogDataLines.MaxValueWidth());
         }
     }
 }

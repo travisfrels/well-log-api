@@ -20,5 +20,13 @@ namespace WellLog.Lib.DataAccess
             using var lasFile = File.Open(fileName, FileMode.Open, FileAccess.Read);
             return _lasLogBusiness.ReadStream(lasFile);
         }
+
+        public void Write(string fileName, LasLog lasLog)
+        {
+            if (string.IsNullOrEmpty(fileName)) { throw new ArgumentNullException(nameof(fileName)); }
+            if (lasLog == null) { throw new ArgumentNullException(nameof(lasLog)); }
+            using var lasFile = File.Open(fileName, FileMode.Create, FileAccess.Write);
+            _lasLogBusiness.WriteStream(lasFile, lasLog);
+        }
     }
 }

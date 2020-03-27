@@ -6,5 +6,6 @@ namespace WellLog.Lib.Business
     public interface ILasSectionBusiness
     {
         LasSection ReadSection(Stream lasStream);
+        void WriteSection(Stream lasStream, LasSection lasSection);
     }
 }
