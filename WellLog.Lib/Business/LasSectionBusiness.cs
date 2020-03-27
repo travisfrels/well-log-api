@@ -11,7 +11,7 @@ namespace WellLog.Lib.Business
 {
     public class LasSectionBusiness : ILasSectionBusiness
     {
-        private const int LINE_WIDTH = 80;
+        private const string DIVIDER = "#-------------------------------------------------------------------------------";
 
         private readonly ILasSectionLineBusiness _lasSectionLineBusiness;
 
@@ -107,6 +107,21 @@ namespace WellLog.Lib.Business
             return lasSection;
         }
 
+        public string GetMnemonicSectionLabel(int mnemonicWidth, int unitWidth, int dataWidth)
+        {
+            if (mnemonicWidth < 0) { throw new ArgumentOutOfRangeException(nameof(mnemonicWidth), mnemonicWidth, "mnemonic width is less than zero"); }
+            if (unitWidth < 0) { throw new ArgumentOutOfRangeException(nameof(unitWidth), unitWidth, "unit width is less than zero"); }
+            if (dataWidth < 0) { throw new ArgumentOutOfRangeException(nameof(dataWidth), dataWidth, "data width is less than zero"); }
+
+            return string.Format
+                (
+                    "#{0}.{1} {2}:DESCRIPTION",
+                    "MNEM".PadRight(mnemonicWidth),
+                    "UNITS".PadRight(unitWidth),
+                    "DATA".PadRight(dataWidth)
+                );
+        }
+
         public void WriteMnemonicSection(Stream lasStream, IEnumerable<LasMnemonicLine> mnemonicLines)
         {
             if (lasStream == null) { return; }
@@ -116,12 +131,12 @@ namespace WellLog.Lib.Business
             var unitWidth = Math.Max(5, mnemonicLines.MaxUnitsWidth());
             var dataWidth = Math.Max(4, mnemonicLines.MaxDataWidth());
 
-            lasStream.WriteLasLine("#".PadRight(LINE_WIDTH, '-'));
-            lasStream.WriteLasLine($"#{"MNEM".PadRight(mnemonicWidth)}.{"UNITS".PadRight(unitWidth)} {"DATA".PadRight(dataWidth)}:DESCRIPTION");
-            lasStream.WriteLasLine("#".PadRight(LINE_WIDTH, '-'));
+            lasStream.WriteLasLine(DIVIDER);
+            lasStream.WriteLasLine(GetMnemonicSectionLabel(mnemonicWidth, unitWidth, dataWidth));
+            lasStream.WriteLasLine(DIVIDER);
             foreach (var line in mnemonicLines)
             {
-                lasStream.WriteLasLine($" {line.Mnemonic.PadRight(mnemonicWidth)}.{line.Units.PadRight(unitWidth)} {line.Data.PadRight(dataWidth)}:{line.Description}");
+                lasStream.WriteLasLine(line.GetLasLine(mnemonicWidth, unitWidth, dataWidth));
             }
             lasStream.WriteLasLine(string.Empty);
         }
@@ -131,11 +146,7 @@ namespace WellLog.Lib.Business
             if (lasStream == null) { return; }
             if (asciiLogDataLines == null || !asciiLogDataLines.Any()) { return; }
 
-            var valueWidth = 1 + asciiLogDataLines
-                .Where(x => x.Values != null && x.Values.Count() > 0)
-                .Max(x => x.Values.Where(y => !string.IsNullOrEmpty(y)).Max(y => y.Length));
-            var numValues = asciiLogDataLines.Where(x => x.Values != null).Max(x => x.Values.Count());
-
+            var valueWidth = 1 + asciiLogDataLines.MaxValueWidth();
             foreach (var line in asciiLogDataLines)
             {
                 lasStream.WriteLasLine(string.Join(' ', line.Values.Select(x => x.PadLeft(valueWidth))));
@@ -147,7 +158,7 @@ namespace WellLog.Lib.Business
             if (lasStream == null) { return; }
             if (lasLines == null || !lasLines.Any()) { return; }
 
-            lasStream.WriteLasLine("#".PadRight(LINE_WIDTH, '-'));
+            lasStream.WriteLasLine(DIVIDER);
             foreach (var lasLine in lasLines)
             {
                 lasStream.WriteLasLine(lasLine);

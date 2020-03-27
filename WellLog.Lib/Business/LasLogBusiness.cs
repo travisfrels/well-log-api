@@ -57,8 +57,8 @@ namespace WellLog.Lib.Business
         public void WriteStream(Stream lasStream, LasLog lasLog)
         {
             if (lasStream == null) { throw new ArgumentNullException(nameof(lasStream)); }
-            if (lasLog == null) { throw new ArgumentNullException(nameof(lasLog)); }
 
+            if (lasLog == null) { return; }
             foreach(var section in lasLog.Sections)
             {
                 _lasSectionBusiness.WriteSection(lasStream, section);

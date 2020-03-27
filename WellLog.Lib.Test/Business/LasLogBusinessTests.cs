@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 using System.IO;
 using WellLog.Lib.Business;
+using WellLog.Lib.Models;
 
 namespace WellLog.Lib.Test.Business
 {
@@ -36,5 +37,35 @@ namespace WellLog.Lib.Test.Business
             var lasStream = new MemoryStream(new byte[0]);
             Assert.DoesNotThrow(() => { _lasLogBusiness.ReadStream(lasStream); });
         }
+
+        [Test]
+        public void LasLogBusiness_WriteStream_Fail_NullStream()
+        {
+            Assert.Throws<ArgumentNullException>(() => { _lasLogBusiness.WriteStream(null, null); });
+        }
+
+        [Test]
+        public void LasLogBusiness_WriteStream_Pass_NullLasLog()
+        {
+            var lasStream = new MemoryStream();
+            Assert.DoesNotThrow(() => _lasLogBusiness.WriteStream(lasStream, null));
+        }
+
+        [Test]
+        public void LasLogBusiness_WriteStream_Pass()
+        {
+            var lasStream = new MemoryStream();
+            var lasLog = new LasLog
+            {
+                Sections = new LasSection[]
+                {
+                    new LasSection(),
+                    new LasSection()
+                }
+            };
+
+            Assert.DoesNotThrow(() => _lasLogBusiness.WriteStream(lasStream, lasLog));
+        }
+
     }
 }

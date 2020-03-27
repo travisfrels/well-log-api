@@ -18,7 +18,7 @@ namespace LAS
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             var lasLogFileDataAccess = serviceProvider.GetService<ILasLogFileDataAccess>();
-            var lasLog = lasLogFileDataAccess.Read("sample1.las");
+            var lasLog = lasLogFileDataAccess.Read("sample2.las");
             foreach (var section in lasLog.Sections)
             {
                 Console.WriteLine($"{section.SectionType}");

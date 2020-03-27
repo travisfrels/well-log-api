@@ -13,7 +13,7 @@ namespace WellLog.Lib.Helpers
         private const byte ASCII_CARRIAGE_RETURN = 13;
         private const byte ASCII_SPACE = 32;
 
-        private static byte ToLasByte(this byte b)
+        public static byte ToLasByte(this byte b)
         {
             if (b == ASCII_LINE_FEED || b == ASCII_CARRIAGE_RETURN || (b >= 32 && b <= 126))
             {
