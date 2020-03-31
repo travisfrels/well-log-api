@@ -4,24 +4,24 @@ namespace WellLog.Lib.Models.DLIS
 {
     public class ComponentDescriptor
     {
-        private const byte ABSENT_ATTRIBUTE_ROLE = 0b_0000_0000;
-        private const byte ATTRIBUTE_ROLE = 0b_0010_0000;
-        private const byte INVARIANT_ATTRIBUTE_ROLE = 0b_0100_0000;
-        private const byte OBJECT_ROLE = 0b_0110_0000;
-        private const byte REDUNDANT_SET_ROLE = 0b_1010_0000;
-        private const byte REPLACEMENT_SET_ROLE = 0b_1100_0000;
-        private const byte SET_ROLE = 0b_1110_0000;
+        public const byte ABSENT_ATTRIBUTE_ROLE = 0b_0000_0000;
+        public const byte ATTRIBUTE_ROLE = 0b_0010_0000;
+        public const byte INVARIANT_ATTRIBUTE_ROLE = 0b_0100_0000;
+        public const byte OBJECT_ROLE = 0b_0110_0000;
+        public const byte REDUNDANT_SET_ROLE = 0b_1010_0000;
+        public const byte REPLACEMENT_SET_ROLE = 0b_1100_0000;
+        public const byte SET_ROLE = 0b_1110_0000;
 
-        private const byte SET_TYPE_MASK = 0b_0001_0000;
-        private const byte SET_NAME_MASK = 0b_0000_1000;
+        public const byte SET_TYPE_MASK = 0b_0001_0000;
+        public const byte SET_NAME_MASK = 0b_0000_1000;
 
-        private const byte OBJ_NAME_MASK = 0b_0001_0000;
+        public const byte OBJ_NAME_MASK = 0b_0001_0000;
 
-        private const byte ATTR_LABEL_MASK = 0b_0001_0000;
-        private const byte ATTR_COUNT_MASK = 0b_0001_0000;
-        private const byte ATTR_REPRESENTATION_CODE_MASK = 0b_0001_0000;
-        private const byte ATTR_UNITS_MASK = 0b_0001_0000;
-        private const byte ATTR_VALUE_MASK = 0b_0001_0000;
+        public const byte ATTR_LABEL_MASK = 0b_0001_0000;
+        public const byte ATTR_COUNT_MASK = 0b_0001_0000;
+        public const byte ATTR_REPRESENTATION_CODE_MASK = 0b_0001_0000;
+        public const byte ATTR_UNITS_MASK = 0b_0001_0000;
+        public const byte ATTR_VALUE_MASK = 0b_0001_0000;
 
         private readonly byte _descriptor;
 

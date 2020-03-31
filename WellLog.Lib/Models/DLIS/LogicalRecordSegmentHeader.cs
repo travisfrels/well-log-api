@@ -4,14 +4,14 @@ namespace WellLog.Lib.Models.DLIS
 {
     public class LogicalRecordSegmentHeader
     {
-        private const byte LOGICAL_RECORD_STRUCTURE_MASK = 0b_1000_0000;
-        private const byte PREDECESSOR_MASK = 0b_0100_0000;
-        private const byte SUCCESSOR_MASK = 0b_0010_0000;
-        private const byte ENCRYPTION_MASK = 0b_0001_0000;
-        private const byte ENCRYPTION_PACKET_MASK = 0b_0000_1000;
-        private const byte CHECKSUM_MASK = 0b_0000_0100;
-        private const byte TRAILING_LENGTH_MASK = 0b_0000_0010;
-        private const byte PADDING_MASK = 0b_0000_0001;
+        public const byte LOGICAL_RECORD_STRUCTURE_MASK = 0b_1000_0000;
+        public const byte PREDECESSOR_MASK = 0b_0100_0000;
+        public const byte SUCCESSOR_MASK = 0b_0010_0000;
+        public const byte ENCRYPTION_MASK = 0b_0001_0000;
+        public const byte ENCRYPTION_PACKET_MASK = 0b_0000_1000;
+        public const byte CHECKSUM_MASK = 0b_0000_0100;
+        public const byte TRAILING_LENGTH_MASK = 0b_0000_0010;
+        public const byte PADDING_MASK = 0b_0000_0001;
 
         public uint LogicalRecordSegmentLength { get; set; }
         public byte LogicalRecordSegmentAttributes { get; set; }
