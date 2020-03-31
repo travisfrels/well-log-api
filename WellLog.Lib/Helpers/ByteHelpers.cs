@@ -4,15 +4,24 @@ namespace WellLog.Lib.Helpers
 {
     public static class ByteHelpers
     {
-        public static bool GetBit(this byte b, byte mask)
+        public static bool GetBitUsingMask(this byte b, byte mask)
         {
             return (b & mask) > 0;
         }
 
-        public static byte SetBit(this byte b, byte mask, bool value)
+        public static byte SetBitUsingMask(this byte b, byte mask)
         {
-            if (value) { return Convert.ToByte(b | mask); }
+            return Convert.ToByte(b | mask);
+        }
+
+        public static byte ClearBitUsingMask(this byte b, byte mask)
+        {
             return Convert.ToByte(b & ~mask);
+        }
+
+        public static byte AssignBitUsingMask(this byte b, byte mask, bool value)
+        {
+            return value ? b.SetBitUsingMask(mask) : b.ClearBitUsingMask(mask);
         }
 
         public static bool IsComponentRole(this byte b, byte role)

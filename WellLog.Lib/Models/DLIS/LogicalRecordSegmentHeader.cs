@@ -19,50 +19,50 @@ namespace WellLog.Lib.Models.DLIS
 
         public bool LogicalRecordStructure
         {
-            get { return LogicalRecordSegmentAttributes.GetBit(LOGICAL_RECORD_STRUCTURE_MASK); }
-            set { LogicalRecordSegmentAttributes = LogicalRecordSegmentAttributes.SetBit(LOGICAL_RECORD_STRUCTURE_MASK, value); }
+            get { return LogicalRecordSegmentAttributes.GetBitUsingMask(LOGICAL_RECORD_STRUCTURE_MASK); }
+            set { LogicalRecordSegmentAttributes = LogicalRecordSegmentAttributes.AssignBitUsingMask(LOGICAL_RECORD_STRUCTURE_MASK, value); }
         }
 
         public bool Predecessor
         {
-            get { return LogicalRecordSegmentAttributes.GetBit(PREDECESSOR_MASK); }
-            set { LogicalRecordSegmentAttributes = LogicalRecordSegmentAttributes.SetBit(PREDECESSOR_MASK, value); }
+            get { return LogicalRecordSegmentAttributes.GetBitUsingMask(PREDECESSOR_MASK); }
+            set { LogicalRecordSegmentAttributes = LogicalRecordSegmentAttributes.AssignBitUsingMask(PREDECESSOR_MASK, value); }
         }
 
         public bool Successor
         {
-            get { return LogicalRecordSegmentAttributes.GetBit(SUCCESSOR_MASK); }
-            set { LogicalRecordSegmentAttributes = LogicalRecordSegmentAttributes.SetBit(SUCCESSOR_MASK, value); }
+            get { return LogicalRecordSegmentAttributes.GetBitUsingMask(SUCCESSOR_MASK); }
+            set { LogicalRecordSegmentAttributes = LogicalRecordSegmentAttributes.AssignBitUsingMask(SUCCESSOR_MASK, value); }
         }
 
         public bool Encryption
         {
-            get { return LogicalRecordSegmentAttributes.GetBit(ENCRYPTION_MASK); }
-            set { LogicalRecordSegmentAttributes = LogicalRecordSegmentAttributes.SetBit(ENCRYPTION_MASK, value); }
+            get { return LogicalRecordSegmentAttributes.GetBitUsingMask(ENCRYPTION_MASK); }
+            set { LogicalRecordSegmentAttributes = LogicalRecordSegmentAttributes.AssignBitUsingMask(ENCRYPTION_MASK, value); }
         }
 
         public bool EncryptionPacket
         {
-            get { return LogicalRecordSegmentAttributes.GetBit(ENCRYPTION_PACKET_MASK); }
-            set { LogicalRecordSegmentAttributes = LogicalRecordSegmentAttributes.SetBit(ENCRYPTION_PACKET_MASK, value); }
+            get { return LogicalRecordSegmentAttributes.GetBitUsingMask(ENCRYPTION_PACKET_MASK); }
+            set { LogicalRecordSegmentAttributes = LogicalRecordSegmentAttributes.AssignBitUsingMask(ENCRYPTION_PACKET_MASK, value); }
         }
 
         public bool Checksum
         {
-            get { return LogicalRecordSegmentAttributes.GetBit(CHECKSUM_MASK); }
-            set { LogicalRecordSegmentAttributes = LogicalRecordSegmentAttributes.SetBit(CHECKSUM_MASK, value); }
+            get { return LogicalRecordSegmentAttributes.GetBitUsingMask(CHECKSUM_MASK); }
+            set { LogicalRecordSegmentAttributes = LogicalRecordSegmentAttributes.AssignBitUsingMask(CHECKSUM_MASK, value); }
         }
 
         public bool TrailingLength
         {
-            get { return LogicalRecordSegmentAttributes.GetBit(TRAILING_LENGTH_MASK); }
-            set { LogicalRecordSegmentAttributes = LogicalRecordSegmentAttributes.SetBit(TRAILING_LENGTH_MASK, value); }
+            get { return LogicalRecordSegmentAttributes.GetBitUsingMask(TRAILING_LENGTH_MASK); }
+            set { LogicalRecordSegmentAttributes = LogicalRecordSegmentAttributes.AssignBitUsingMask(TRAILING_LENGTH_MASK, value); }
         }
 
         public bool Padding
         {
-            get { return LogicalRecordSegmentAttributes.GetBit(PADDING_MASK); }
-            set { LogicalRecordSegmentAttributes = LogicalRecordSegmentAttributes.SetBit(PADDING_MASK, value); }
+            get { return LogicalRecordSegmentAttributes.GetBitUsingMask(PADDING_MASK); }
+            set { LogicalRecordSegmentAttributes = LogicalRecordSegmentAttributes.AssignBitUsingMask(PADDING_MASK, value); }
         }
     }
 }

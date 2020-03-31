@@ -7,37 +7,37 @@ namespace WellLog.Lib.Test.Helpers
     public class ByteHelpersTests
     {
         [Test]
-        public void ByteHelpers_GetBit_Pass_HasMaskBit()
+        public void ByteHelpers_GetBitUsingMask_Pass_HasMaskBit()
         {
             byte b = 0b_1000_0000;
             byte mask = 0b_1000_0000;
-            Assert.IsTrue(b.GetBit(mask));
+            Assert.IsTrue(b.GetBitUsingMask(mask));
         }
 
         [Test]
-        public void ByteHelpers_GetBit_Pass_NoMaskBit()
+        public void ByteHelpers_GetBitUsingMask_Pass_NoMaskBit()
         {
             byte b = 0b_0000_0000;
             byte mask = 0b_1000_0000;
-            Assert.IsFalse(b.GetBit(mask));
+            Assert.IsFalse(b.GetBitUsingMask(mask));
         }
 
         [Test]
-        public void ByteHelpers_SetBit_Pass_SetBitTrue()
+        public void ByteHelpers_AssignBitUsingMask_Pass_AssignBitTrue()
         {
             byte b = 0b_0000_0000;
             byte mask = 0b_0000_0001;
             byte expected = 0b_0000_0001;
-            Assert.AreEqual(expected, b.SetBit(mask, true));
+            Assert.AreEqual(expected, b.AssignBitUsingMask(mask, true));
         }
 
         [Test]
-        public void ByteHelpers_SetBit_Pass_SetBitFalse()
+        public void ByteHelpers_AssignBitUsingMask_Pass_AssignBitFalse()
         {
             byte b = 0b_0000_0001;
             byte mask = 0b_0000_0001;
             byte expected = 0b_0000_0000;
-            Assert.AreEqual(expected, b.SetBit(mask, false));
+            Assert.AreEqual(expected, b.AssignBitUsingMask(mask, false));
         }
 
         [Test]
