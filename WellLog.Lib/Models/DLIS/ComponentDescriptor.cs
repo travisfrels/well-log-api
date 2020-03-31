@@ -33,14 +33,14 @@ namespace WellLog.Lib.Models.DLIS
         public bool IsReplacementSet => _descriptor.IsComponentRole(REPLACEMENT_SET_ROLE);
         public bool IsSet => _descriptor.IsComponentRole(SET_ROLE);
 
-        public bool SetHasType => (IsSet || IsRedundantSet || IsReplacementSet) ? _descriptor.GetBitUsingMask(SET_TYPE_MASK) : false;
-        public bool SetHasName => (IsSet || IsRedundantSet || IsReplacementSet) ? _descriptor.GetBitUsingMask(SET_NAME_MASK) : false;
-        public bool ObjectHasName => IsObject ? _descriptor.GetBitUsingMask(OBJ_NAME_MASK) : false;
-        public bool AttributeHasLabel => (IsAttribute || IsInvariantAttribute) ? _descriptor.GetBitUsingMask(ATTR_LABEL_MASK) : false;
-        public bool AttributeHasCount => (IsAttribute || IsInvariantAttribute) ? _descriptor.GetBitUsingMask(ATTR_COUNT_MASK) : false;
-        public bool AttributeHasRepresentationCode => (IsAttribute || IsInvariantAttribute) ? _descriptor.GetBitUsingMask(ATTR_REPRESENTATION_CODE_MASK) : false;
-        public bool AttributeHasUnits => (IsAttribute || IsInvariantAttribute) ? _descriptor.GetBitUsingMask(ATTR_UNITS_MASK) : false;
-        public bool AttributeHasValue => (IsAttribute || IsInvariantAttribute) ? _descriptor.GetBitUsingMask(ATTR_VALUE_MASK) : false;
+        public bool DoesSetHaveType => (IsSet || IsRedundantSet || IsReplacementSet) ? _descriptor.GetBitUsingMask(SET_TYPE_MASK) : false;
+        public bool DoesSetHaveName => (IsSet || IsRedundantSet || IsReplacementSet) ? _descriptor.GetBitUsingMask(SET_NAME_MASK) : false;
+        public bool DoesObjectHaveName => IsObject ? _descriptor.GetBitUsingMask(OBJ_NAME_MASK) : false;
+        public bool DoesAttributeHaveLabel => (IsAttribute || IsInvariantAttribute) ? _descriptor.GetBitUsingMask(ATTR_LABEL_MASK) : false;
+        public bool DoesAttributeHaveCount => (IsAttribute || IsInvariantAttribute) ? _descriptor.GetBitUsingMask(ATTR_COUNT_MASK) : false;
+        public bool DoesAttributeHaveRepresentationCode => (IsAttribute || IsInvariantAttribute) ? _descriptor.GetBitUsingMask(ATTR_REPRESENTATION_CODE_MASK) : false;
+        public bool DoesAttributeHaveUnits => (IsAttribute || IsInvariantAttribute) ? _descriptor.GetBitUsingMask(ATTR_UNITS_MASK) : false;
+        public bool DoesAttributeHaveValue => (IsAttribute || IsInvariantAttribute) ? _descriptor.GetBitUsingMask(ATTR_VALUE_MASK) : false;
 
         public ComponentDescriptor(byte descriptor)
         {
