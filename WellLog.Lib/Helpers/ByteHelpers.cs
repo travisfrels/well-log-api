@@ -28,5 +28,39 @@ namespace WellLog.Lib.Helpers
         {
             return (b >> 5) == (role >> 5);
         }
+
+        public static byte[] ShiftLeft(this byte[] bytes)
+        {
+            if (bytes == null) { return null; }
+
+            var buffer = new byte[bytes.Length];
+
+            var carryFlag = false;
+            for (int i = bytes.Length - 1; i >= 0; i--)
+            {
+                var b = bytes[i];
+                buffer[i] = Convert.ToByte(b << 1).AssignBitUsingMask(0b_0000_0001, carryFlag);
+                carryFlag = b.GetBitUsingMask(0b_1000_0000);
+            }
+
+            return buffer;
+        }
+
+        public static byte[] ShiftRight(this byte[] bytes)
+        {
+            if (bytes == null) { return null; }
+
+            var buffer = new byte[bytes.Length];
+
+            var carryFlag = false;
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                var b = bytes[i];
+                buffer[i] = Convert.ToByte(b >> 1).AssignBitUsingMask(0b_1000_0000, carryFlag);
+                carryFlag = b.GetBitUsingMask(0b_0000_0001);
+            }
+
+            return buffer;
+        }
     }
 }
