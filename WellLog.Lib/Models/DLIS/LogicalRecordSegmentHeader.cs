@@ -15,7 +15,7 @@ namespace WellLog.Lib.Models.DLIS
 
         public uint LogicalRecordSegmentLength { get; set; }
         public byte LogicalRecordSegmentAttributes { get; set; }
-        public ushort LogicalRecordType { get; set; }
+        public byte LogicalRecordType { get; set; }
 
         public bool LogicalRecordStructure
         {
