@@ -6,8 +6,8 @@ namespace WellLog.Lib.Models.DLIS
 {
     public class OBNAME
     {
-        public uint O { get; set; }
-        public byte C { get; set; }
-        public string I { get; set; }
+        public uint Origin { get; set; }
+        public byte CopyNumber { get; set; }
+        public string Identifier { get; set; }
     }
 }

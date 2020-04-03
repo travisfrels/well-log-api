@@ -2,7 +2,7 @@
 {
     public class OBJREF
     {
-        public string T { get; set; }
-        public OBNAME N { get; set; }
+        public string ObjectType { get; set; }
+        public OBNAME Name { get; set; }
     }
 }

@@ -6,8 +6,8 @@ namespace WellLog.Lib.Models.DLIS
 {
     public class ATTREF
     {
-        public string T { get; set; }
-        public OBNAME N { get; set; }
-        public string L { get; set; }
+        public string ObjectType { get; set; }
+        public OBNAME Name { get; set; }
+        public string Label { get; set; }
     }
 }
