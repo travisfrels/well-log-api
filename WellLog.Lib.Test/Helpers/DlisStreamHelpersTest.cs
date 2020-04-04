@@ -12,6 +12,200 @@ namespace WellLog.Lib.Test.Helpers
         private static readonly MemoryStream nullStream = null;
 
         [Test]
+        public void DlisStreamHelpers_ReadFSHORT_Pass_NullStream()
+        {
+            var expected = 0f;
+            Assert.AreEqual(expected, nullStream.ReadFSHORT());
+        }
+
+        [Test]
+        public void DlisStreamHelpers_ReadFSHORT_Pass_EmptyStream()
+        {
+            var dlisStream = new MemoryStream();
+            var expected = 0f;
+            Assert.AreEqual(expected, dlisStream.ReadFSHORT());
+        }
+
+        [Test]
+        public void DlisStreamHelpers_ReadFSHORT_Pass_ShortStream()
+        {
+            var dlisStream = new MemoryStream(new byte[] { 0b_0100_0000 });
+            var expected = 0f;
+            Assert.AreEqual(expected, dlisStream.ReadFSHORT());
+        }
+
+        [Test]
+        public void DlisStreamHelpers_ReadFSHORT_Pass_Positive()
+        {
+            var dlisStream = new MemoryStream(new byte[] { 0b_0000_0000, 0b_0001_1000 });
+            var expected = 0.125f;
+            Assert.AreEqual(expected, dlisStream.ReadFSHORT());
+        }
+
+        [Test]
+        public void DlisStreamHelpers_ReadFSHORT_Pass_Negative()
+        {
+            var dlisStream = new MemoryStream(new byte[] { 0b_1111_1111, 0b_1111_1000 });
+            var expected = -0.125f;
+            Assert.AreEqual(expected, dlisStream.ReadFSHORT());
+        }
+
+        [Test]
+        public void DlisStreamHelpers_ReadFSINGL_Pass_NullStream()
+        {
+            var expected = 0f;
+            Assert.AreEqual(expected, nullStream.ReadFSINGL());
+        }
+
+        [Test]
+        public void DlisStreamHelpers_ReadFSINGL_Pass_EmptyStream()
+        {
+            var dlisStream = new MemoryStream();
+            var expected = 0f;
+            Assert.AreEqual(expected, dlisStream.ReadFSINGL());
+        }
+
+        [Test]
+        public void DlisStreamHelpers_ReadFSINGL_Pass_ShortStream()
+        {
+            var dlisStream = new MemoryStream(new byte[] { 0b_0100_0000, 0b_0100_1001, 0b_0000_1111 });
+            var expected = 0f;
+            Assert.AreEqual(expected, dlisStream.ReadFSINGL());
+        }
+
+        [Test]
+        public void DlisStreamHelpers_ReadFSINGL_Pass_PositivePi()
+        {
+            var dlisStream = new MemoryStream(new byte[] { 0b_0100_0000, 0b_0100_1001, 0b_0000_1111, 0b_1101_1011 });
+            var expected = 3.14159274f;
+            Assert.AreEqual(expected, dlisStream.ReadFSINGL());
+        }
+
+        [Test]
+        public void DlisStreamHelpers_ReadFSINGL_Pass_NegativePi()
+        {
+            var dlisStream = new MemoryStream(new byte[] { 0b_1100_0000, 0b_0100_1001, 0b_0000_1111, 0b_1101_1011 });
+            var expected = -3.14159274f;
+            Assert.AreEqual(expected, dlisStream.ReadFSINGL());
+        }
+
+        [Test]
+        public void DlisStreamHelpers_ReadFSING1_Pass_NullStream()
+        {
+            Assert.IsNull(nullStream.ReadFSING1());
+        }
+
+        [Test]
+        public void DlisStreamHelpers_ReadFSING1_Pass_EmptyStream()
+        {
+            var dlisStream = new MemoryStream();
+            Assert.IsNull(dlisStream.ReadFSING1());
+        }
+
+        [Test]
+        public void DlisStreamHelpers_ReadFSING1_Pass()
+        {
+            var dlisStream = new MemoryStream(new byte[] { 0b_0100_0011, 0b_0001_1001, 0b_0000_0000, 0b_0000_0000, 0b_1100_0011, 0b_0001_1001, 0b_0000_0000, 0b_0000_0000 });
+            var fSing1 = dlisStream.ReadFSING1();
+            Assert.AreEqual(153f, fSing1.V);
+            Assert.AreEqual(-153f, fSing1.A);
+        }
+
+        [Test]
+        public void DlisStreamHelpers_ReadFSING2_Pass_NullStream()
+        {
+            Assert.IsNull(nullStream.ReadFSING2());
+        }
+
+        [Test]
+        public void DlisStreamHelpers_ReadFSING2_Pass_EmptyStream()
+        {
+            var dlisStream = new MemoryStream();
+            Assert.IsNull(dlisStream.ReadFSING2());
+        }
+
+        [Test]
+        public void DlisStreamHelpers_ReadFSING2_Pass()
+        {
+            var dlisStream = new MemoryStream(new byte[] { 0b_0100_0011, 0b_0001_1001, 0b_0000_0000, 0b_0000_0000, 0b_1100_0011, 0b_0001_1001, 0b_0000_0000, 0b_0000_0000, 0b_0100_0000, 0b_0100_1001, 0b_0000_1111, 0b_1101_1011 });
+            var fSing1 = dlisStream.ReadFSING2();
+            Assert.AreEqual(153f, fSing1.V);
+            Assert.AreEqual(-153f, fSing1.A);
+            Assert.AreEqual(3.14159274f, fSing1.B);
+        }
+
+        [Test]
+        public void DlisStreamHelpers_ReadVSINGL_Pass_NullStream()
+        {
+            var expected = 0f;
+            Assert.AreEqual(expected, nullStream.ReadVSINGL());
+        }
+
+        [Test]
+        public void DlisStreamHelpers_ReadVSINGL_Pass_EmptyStream()
+        {
+            var dlisStream = new MemoryStream();
+            var expected = 0f;
+            Assert.AreEqual(expected, dlisStream.ReadVSINGL());
+        }
+
+        [Test]
+        public void DlisStreamHelpers_ReadVSINGL_Pass_ShortStream()
+        {
+            var dlisStream = new MemoryStream(new byte[] { 0b_0100_0000, 0b_0100_1001, 0b_0000_1111 });
+            var expected = 0f;
+            Assert.AreEqual(expected, dlisStream.ReadVSINGL());
+        }
+
+        [Test]
+        public void DlisStreamHelpers_ReadVSINGL_Pass_Positive()
+        {
+            var vaxFloats = new byte[] {
+                0x80, 0x40, 0x00, 0x00,
+                0x80, 0xC0, 0x00, 0x00,
+                0x60, 0x41, 0x00, 0x00,
+                0x60, 0xC1, 0x00, 0x00,
+                0x49, 0x41, 0xD0, 0x0F,
+                0x49, 0xC1, 0xD0, 0x0F,
+                0xF0, 0x7D, 0xC2, 0xBD,
+                0xF0, 0xFD, 0xC2, 0xBD,
+                0x08, 0x03, 0xEA, 0x1C,
+                0x08, 0x83, 0xEA, 0x1C,
+                0x9E, 0x40, 0x52, 0x06,
+                0x9E, 0xC0, 0x52, 0x06
+            };
+
+            var dlisStream = new MemoryStream(vaxFloats);
+
+            /*
+             *  1.000000       00-00-40-80
+             * -1.000000       00-00-C0-80
+             *  3.500000       00-00-41-60
+             * -3.500000       00-00-C1-60
+             *  3.141590       0F-D0-41-49
+             * -3.141590       0F-D0-C1-49
+             *  9.9999999E+36  BD-C2-7D-F0
+             * -9.9999999E+36  BD-C2-FD-F0
+             *  9.9999999E-38  1C-EA-03-08
+             * -9.9999999E-38  1C-EA-83-08
+             *  1.23456788     06-52-40-9E
+             * -1.23456788     06-52-C0-9E
+             */
+            Assert.AreEqual(1f, dlisStream.ReadVSINGL());
+            Assert.AreEqual(-1f, dlisStream.ReadVSINGL());
+            Assert.AreEqual(3.5f, dlisStream.ReadVSINGL());
+            Assert.AreEqual(-3.5f, dlisStream.ReadVSINGL());
+            Assert.AreEqual(3.14159f, dlisStream.ReadVSINGL());
+            Assert.AreEqual(-3.14159f, dlisStream.ReadVSINGL());
+            Assert.AreEqual(9.9999999E+36f, dlisStream.ReadVSINGL());
+            Assert.AreEqual(-9.9999999E+36f, dlisStream.ReadVSINGL());
+            Assert.AreEqual(9.9999999E-38f, dlisStream.ReadVSINGL());
+            Assert.AreEqual(-9.9999999E-38f, dlisStream.ReadVSINGL());
+            Assert.AreEqual(1.23456788f, dlisStream.ReadVSINGL());
+            Assert.AreEqual(-1.23456788f, dlisStream.ReadVSINGL());
+        }
+
+        [Test]
         public void DlisStreamHelpers_ReadSSHORT_Pass_NullStream()
         {
             sbyte expected = 0;
@@ -19,9 +213,9 @@ namespace WellLog.Lib.Test.Helpers
         }
 
         [Test]
-        public void DlisStreamHelpers_ReadSSHORT_Pass_ShortStream()
+        public void DlisStreamHelpers_ReadSSHORT_Pass_EmptyStream()
         {
-            var dlisStream = new MemoryStream(new byte[0]);
+            var dlisStream = new MemoryStream();
             sbyte expected = 0;
             Assert.AreEqual(expected, dlisStream.ReadSSHORT());
         }

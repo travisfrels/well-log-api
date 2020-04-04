@@ -44,7 +44,7 @@ namespace WellLog.Lib.Helpers
             if (bytes == null) { return null; }
 
             var n = bytes.Length;
-            if (n == 0) { return new byte[0]; }
+            if (n == 0) { return bytes; }
 
             var buffer = new byte[n];
 
@@ -55,6 +55,20 @@ namespace WellLog.Lib.Helpers
                 buffer[i] = b.ShiftLeft(1).AssignBitUsingMask(0b_0000_0001, carryFlag);
                 carryFlag = b.GetBitUsingMask(0b_1000_0000);
             }
+
+            return buffer;
+        }
+
+        public static byte[] ShiftLeft(this byte[] bytes, byte p)
+        {
+            if (bytes == null) { return null; }
+            if (p < 1) { return bytes; }
+
+            var n = bytes.Length;
+            if (n == 0) { return bytes; }
+
+            var buffer = bytes.ShiftLeft();
+            for (var i = 1; i < p; i++) { buffer = buffer.ShiftLeft(); }
 
             return buffer;
         }
@@ -75,6 +89,20 @@ namespace WellLog.Lib.Helpers
                 buffer[i] = b.ShiftRight(1).AssignBitUsingMask(0b_1000_0000, carryFlag);
                 carryFlag = b.GetBitUsingMask(0b_0000_0001);
             }
+
+            return buffer;
+        }
+
+        public static byte[] ShiftRight(this byte[] bytes, byte p)
+        {
+            if (bytes == null) { return null; }
+            if (p < 1) { return bytes; }
+
+            var n = bytes.Length;
+            if (n == 0) { return bytes; }
+
+            var buffer = bytes.ShiftRight();
+            for (var i = 1; i < p; i++) { buffer = buffer.ShiftRight(); }
 
             return buffer;
         }
@@ -136,7 +164,7 @@ namespace WellLog.Lib.Helpers
             if (buffer == null) { return 0; }
             if (buffer.Length < 2) { return 0; }
             if (BitConverter.IsLittleEndian != isLittleEndian) { return BitConverter.ToUInt16(buffer[0..2].Reversed()); }
-            return BitConverter.ToUInt16(buffer);
+            return BitConverter.ToUInt16(buffer[0..2]);
         }
 
         public static short ConvertToShort(this byte[] buffer, bool isLittleEndian = true)
@@ -144,15 +172,15 @@ namespace WellLog.Lib.Helpers
             if (buffer == null) { return 0; }
             if (buffer.Length < 2) { return 0; }
             if (BitConverter.IsLittleEndian != isLittleEndian) { return BitConverter.ToInt16(buffer[0..2].Reversed()); }
-            return BitConverter.ToInt16(buffer);
+            return BitConverter.ToInt16(buffer[0..2]);
         }
 
         public static uint ConvertToUInt(this byte[] buffer, bool isLittleEndian = true)
         {
-            if (buffer == null) { return 0; }
-            if (buffer.Length < 4) { return 0; }
+            if (buffer == null) { return 0u; }
+            if (buffer.Length < 4) { return 0u; }
             if (BitConverter.IsLittleEndian != isLittleEndian) { return BitConverter.ToUInt32(buffer[0..4].Reversed()); }
-            return BitConverter.ToUInt16(buffer);
+            return BitConverter.ToUInt16(buffer[0..4]);
         }
 
         public static int ConvertToInt(this byte[] buffer, bool isLittleEndian = true)
@@ -160,7 +188,23 @@ namespace WellLog.Lib.Helpers
             if (buffer == null) { return 0; }
             if (buffer.Length < 4) { return 0; }
             if (BitConverter.IsLittleEndian != isLittleEndian) { return BitConverter.ToInt32(buffer[0..4].Reversed()); }
-            return BitConverter.ToInt32(buffer);
+            return BitConverter.ToInt32(buffer[0..4]);
+        }
+
+        public static float ConvertToFloat(this byte[] buffer, bool isLittleEndian = true)
+        {
+            if (buffer == null) { return 0f; }
+            if (buffer.Length < 4) { return 0f; }
+            if (BitConverter.IsLittleEndian != isLittleEndian) { return BitConverter.ToSingle(buffer[0..4].Reversed()); }
+            return BitConverter.ToSingle(buffer[0..4]);
+        }
+
+        public static double ConvertToDouble(this byte[] buffer, bool isLittleEndian = true)
+        {
+            if (buffer == null) { return 0d; }
+            if (buffer.Length < 8) { return 0d; }
+            if (BitConverter.IsLittleEndian != isLittleEndian) { return BitConverter.ToDouble(buffer[0..8].Reversed()); }
+            return BitConverter.ToDouble(buffer[0..8]);
         }
     }
 }
