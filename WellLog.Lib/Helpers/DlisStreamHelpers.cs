@@ -50,11 +50,10 @@ namespace WellLog.Lib.Helpers
             };
         }
 
-        public static uint IBM_SIGN_MASK = 0x80000000;
-        public static int IBM_EXPONENT_MASK = 0x7F000000;
-        public static int IBM_EXPONENT_SIZE = 7;
-        public static int IBM_MANTISSA_MASK = 0x00FFFFFF;
-        public static int IBM_MANTISSA_SIZE = 24;
+        public static int IBM_EXP_MASK = 0x7F000000;
+        public static int IBM_EXP_SIZE = 7;
+        public static int IBM_FRAC_MASK = 0x00FFFFFF;
+        public static int IBM_FRAC_SIZE = 24;
 
         public static float ReadISINGL(this Stream dlisStream)
         {
@@ -63,24 +62,22 @@ namespace WellLog.Lib.Helpers
             var buffer = dlisStream.ReadBytes(4);
             if (buffer == null) { return 0f; }
 
-            var ibmData = buffer.ConvertToInt(false);
-            var sign = ibmData & (int)IBM_SIGN_MASK;
-            var exponent = ibmData & IBM_EXPONENT_MASK;
-            var mantissa = ibmData & IBM_MANTISSA_MASK;
+            var ibmData = buffer.ConvertToUInt(false);
 
-            exponent >>= 1;
-            mantissa >>= 1;
+            var sign = ibmData >> (IBM_EXP_SIZE + IBM_FRAC_SIZE);
+            var exponent = (ibmData & IBM_EXP_MASK) >> IBM_FRAC_SIZE;
+            var fractional = ibmData & IBM_FRAC_MASK;
 
-            return BitConverter.GetBytes(sign | exponent | mantissa).ConvertToFloat();
+            if (fractional == 0) { return 0f; }
+
+            var mantissa = Convert.ToDouble(fractional) / (1 << IBM_FRAC_SIZE);
+            return (sign == 0 ? 1f : -1f) * Convert.ToSingle(mantissa * Math.Pow(16, exponent - 64));
         }
 
-        public static uint VAX_SIGN_MASK = 0x80000000;
-        public static int VAX_EXPONENT_MASK = 0x7F800000;
-        public static int VAX_MANTISSA_MASK = 0x007FFFFF;
-        public static int VAX_MANTISSA_SIZE = 23;
-        public static int VAX_EXPONENT_ADJUSTMENT = 2;
-        public static int VAX_IN_PLACE_EXPONENT_ADJUSTMENT = 16777216;
-        public static int VAX_HIDDEN_BIT = 0x00800000;
+        public static int VAX_EXP_MASK = 0x7F800000;
+        public static int VAX_EXP_SIZE = 8;
+        public static int VAX_FRAC_MASK = 0x007FFFFF;
+        public static int VAX_FRAC_SIZE = 23;
 
         public static float ReadVSINGL(this Stream dlisStream)
         {
@@ -89,37 +86,16 @@ namespace WellLog.Lib.Helpers
             var buffer = dlisStream.ReadBytes(4);
             if (buffer == null) { return 0f; }
 
-            var vaxData = (new byte[] { buffer[1], buffer[0], buffer[3], buffer[2] }).ConvertToInt(false);
+            var vaxData = (new byte[] { buffer[1], buffer[0], buffer[3], buffer[2] }).ConvertToUInt(false);
 
-            var exponent = vaxData & VAX_EXPONENT_MASK;
-            if (exponent == 0) { return 0f; }
-            exponent >>= VAX_MANTISSA_SIZE;
+            var sign = vaxData >> (VAX_EXP_SIZE + VAX_FRAC_SIZE);
+            var exponent = (vaxData & VAX_EXP_MASK) >> VAX_FRAC_SIZE;
+            var fractional = vaxData & VAX_FRAC_MASK;
 
-            /* The biased VAX exponent has to be adjusted to account for the right shift of the
-             * IEEE mantissa binary point and the difference betweenthe biases in their "excess n"
-             * exponent representations.  If the resulting biased IEEE exponent is less than or
-             * equal to zero, the converted IEEE S_float must use subnormal form.
-             * - Lawrence M. Baker
-             * https://pubs.usgs.gov/of/2005/1424/
-             */
-            exponent -= VAX_EXPONENT_ADJUSTMENT;
-            if (exponent > 0)
-            {
-                return BitConverter.GetBytes(vaxData - VAX_IN_PLACE_EXPONENT_ADJUSTMENT).ConvertToFloat();
-            }
+            if (sign == 0 && exponent == 0) { return 0f; }
 
-            /* In IEEE subnormal form, even though the biased exponent is 0 [e=0], the effective
-             * biased exponent is 1.  The mantissa must be shifted right by the number of bits, n,
-             * required to adjust the biased exponent from its current value, e, to 1
-             * (i.e. e + n = 1, thus n = 1 - e).
-             * n is guaranteed to be at least 1 [e<=0], which guarantees that the hidden 1.m bit
-             * from the original mantissa will become visible, and the resulting subnormal
-             * mantissa will correctly be of the form 0.m.
-             * - Lawrence M. Baker
-             * https://pubs.usgs.gov/of/2005/1424/
-             */
-            vaxData = (vaxData & (int)VAX_SIGN_MASK) | ((VAX_HIDDEN_BIT | (vaxData & VAX_MANTISSA_MASK)) >> (1 - exponent));
-            return BitConverter.GetBytes(vaxData).ConvertToFloat();
+            var mantissa = Convert.ToDouble(fractional) / (2 << VAX_FRAC_SIZE);
+            return (sign == 0 ? 1f : -1f) * Convert.ToSingle((0.5d + mantissa) * Math.Pow(2, exponent - 128));
         }
 
         public static double ReadFDOUBL(this Stream dlisStream)
