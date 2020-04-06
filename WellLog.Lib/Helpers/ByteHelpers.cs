@@ -24,7 +24,7 @@ namespace WellLog.Lib.Helpers
             return value ? b.SetBitUsingMask(mask) : b.ClearBitUsingMask(mask);
         }
 
-        public static bool IsComponentRole(this byte b, byte role)
+        public static bool HasDlisComponentRole(this byte b, byte role)
         {
             return (b >> 5) == (role >> 5);
         }
@@ -37,101 +37,6 @@ namespace WellLog.Lib.Helpers
         public static byte ShiftRight(this byte b, byte p)
         {
             return BitConverter.GetBytes(b >> p)[0];
-        }
-
-        public static byte[] ShiftLeft(this byte[] bytes)
-        {
-            if (bytes == null) { return null; }
-
-            var n = bytes.Length;
-            if (n == 0) { return bytes; }
-
-            var buffer = new byte[n];
-
-            var carryFlag = false;
-            for (int i = n - 1; i >= 0; i--)
-            {
-                var b = bytes[i];
-                buffer[i] = b.ShiftLeft(1).AssignBitUsingMask(0b_0000_0001, carryFlag);
-                carryFlag = b.GetBitUsingMask(0b_1000_0000);
-            }
-
-            return buffer;
-        }
-
-        public static byte[] ShiftLeft(this byte[] bytes, byte p)
-        {
-            if (bytes == null) { return null; }
-            if (p < 1) { return bytes; }
-
-            var n = bytes.Length;
-            if (n == 0) { return bytes; }
-
-            var buffer = bytes.ShiftLeft();
-            for (var i = 1; i < p; i++) { buffer = buffer.ShiftLeft(); }
-
-            return buffer;
-        }
-
-        public static byte[] ShiftRight(this byte[] bytes)
-        {
-            if (bytes == null) { return null; }
-
-            var n = bytes.Length;
-            if (n == 0) { return new byte[0]; }
-
-            var buffer = new byte[n];
-
-            var carryFlag = false;
-            for (int i = 0; i < n; i++)
-            {
-                var b = bytes[i];
-                buffer[i] = b.ShiftRight(1).AssignBitUsingMask(0b_1000_0000, carryFlag);
-                carryFlag = b.GetBitUsingMask(0b_0000_0001);
-            }
-
-            return buffer;
-        }
-
-        public static byte[] ShiftRight(this byte[] bytes, byte p)
-        {
-            if (bytes == null) { return null; }
-            if (p < 1) { return bytes; }
-
-            var n = bytes.Length;
-            if (n == 0) { return bytes; }
-
-            var buffer = bytes.ShiftRight();
-            for (var i = 1; i < p; i++) { buffer = buffer.ShiftRight(); }
-
-            return buffer;
-        }
-
-        public static string ToBinaryString(this byte b)
-        {
-            var response = new char[8];
-            for(var i = 0; i < 8; i++)
-            {
-                response[i] = b.GetBitUsingMask(0b_1000_0000) ? '1' : '0';
-                b = b.ShiftLeft(1);
-            }
-            return new string(response);
-        }
-
-        public static string ToBinaryString(this byte[] bytes)
-        {
-            if (bytes == null) { return null; }
-
-            var n = bytes.Length;
-            if (n == 0) { return string.Empty; }
-
-            var buffer = new string[n];
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                buffer[i] = bytes[i].ToBinaryString();
-            }
-
-            return string.Join(' ', buffer);
         }
 
         public static byte[] Reversed(this byte[] buffer)

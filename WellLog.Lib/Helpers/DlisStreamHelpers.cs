@@ -7,6 +7,12 @@ namespace WellLog.Lib.Helpers
 {
     public static class DlisStreamHelpers
     {
+        public static ushort FSHORT_EXP_MASK = 0x000F;
+        public static int FSHORT_EXP_SIZE = 4;
+        public static ushort FSHORT_FRAC_MASK = 0xFFF0;
+        public static int FSHORT_FRAC_SIZE = 11;
+        public static uint FSHORT_SIGN_MASK = 0xFFFFF000;
+
         public static float ReadFSHORT(this Stream dlisStream)
         {
             if (dlisStream == null || dlisStream.IsAtEndOfStream()) { return 0f; }
@@ -14,13 +20,28 @@ namespace WellLog.Lib.Helpers
             var buffer = dlisStream.ReadBytes(2);
             if (buffer == null) { return 0f; }
 
-            var sign = buffer[0].GetBitUsingMask(0b_1000_0000);
-            var mantissaBuffer = buffer.ShiftRight(4);
-            mantissaBuffer[0] = mantissaBuffer[0].AssignBitUsingMask(0b_1111_0000, sign);
+            var fshortData = buffer.ConvertToUshort(false);
 
-            var mantissa = mantissaBuffer.ConvertToShort(false);
-            var exponent = buffer[1].ClearBitUsingMask(0b_1111_0000);
-            return Convert.ToSingle(mantissa << exponent) / 2048f;
+            /* MMMMMMMMMMMM | EEEE */
+            /* M: 2s complement 12 bit signed integer fraction */
+            /* E: 4 bit unsigned integer */
+            /* V = M * (2 ^ E) */
+            var sign = fshortData >> FSHORT_EXP_SIZE + FSHORT_FRAC_SIZE;
+            var exponent = fshortData & FSHORT_EXP_MASK;
+            var fractional = (fshortData & FSHORT_FRAC_MASK) >> FSHORT_EXP_SIZE;
+
+            if (fractional == 0) { return 0f; }
+
+            /*
+             * shifting right, to get the fraction, shifted in zeros.  the sign bit will tell us if
+             * the fraction was supposed to be a negative number.  if the fraction is supposed to
+             * be negative, then flip all of the leading zeros to ones.
+             */
+            if (sign == 1) { fractional |= (int)FSHORT_SIGN_MASK; }
+            var mantissa = Convert.ToDouble(fractional) / (1 << FSHORT_FRAC_SIZE);
+
+            /* (1 << exponent) == (2 ^ exponent) */
+            return Convert.ToSingle(mantissa * (1 << exponent));
         }
 
         public static float ReadFSINGL(this Stream dlisStream)
@@ -64,6 +85,11 @@ namespace WellLog.Lib.Helpers
 
             var ibmData = buffer.ConvertToUInt(false);
 
+            /* S | EEEEEEE | MMMMMMMMMMMMMMMMMMMMMMMM */
+            /* S: sign bit */
+            /* E: 7 bit unsigned integer */
+            /* M: 24 bit unsigned integer fraction */
+            /* V = (-1 ^ S) * M * (16 ^ (E - 64)) */
             var sign = ibmData >> (IBM_EXP_SIZE + IBM_FRAC_SIZE);
             var exponent = (ibmData & IBM_EXP_MASK) >> IBM_FRAC_SIZE;
             var fractional = ibmData & IBM_FRAC_MASK;
@@ -88,6 +114,11 @@ namespace WellLog.Lib.Helpers
 
             var vaxData = (new byte[] { buffer[1], buffer[0], buffer[3], buffer[2] }).ConvertToUInt(false);
 
+            /* S | EEEEEEEE | MMMMMMMMMMMMMMMMMMMMMMM */
+            /* S: sign bit */
+            /* E: 8 bit unsigned integer */
+            /* M: 23 bit unsigned integer fraction */
+            /* V = (-1 ^ S) * (0.5 + M) * (2 ^ (E - 128)) */
             var sign = vaxData >> (VAX_EXP_SIZE + VAX_FRAC_SIZE);
             var exponent = (vaxData & VAX_EXP_MASK) >> VAX_FRAC_SIZE;
             var fractional = vaxData & VAX_FRAC_MASK;
