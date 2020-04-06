@@ -20,6 +20,7 @@ namespace WellLog.Lib
             serviceCollection.AddScoped<IStorageUnitBusiness, StorageUnitBusiness>();
             serviceCollection.AddScoped<IStorageSetBusiness, StorageSetBusiness>();
             serviceCollection.AddScoped<ILogicalRecordSegmentHeaderBusiness, LogicalRecordSegmentHeaderBusiness>();
+            serviceCollection.AddScoped<ILogicalRecordSegmentEncryptionPacketBusiness, LogicalRecordSegmentEncryptionPacketBusiness>();
             serviceCollection.AddScoped<ILogicalRecordSegmentBusiness, LogicalRecordSegmentBusiness>();
 
             /* Validators */

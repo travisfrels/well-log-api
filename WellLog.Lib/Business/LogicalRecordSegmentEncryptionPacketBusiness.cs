@@ -1,33 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.IO;
+using WellLog.Lib.Helpers;
 using WellLog.Lib.Models.DLIS;
 
 namespace WellLog.Lib.Business
 {
-    public class LogicalRecordSegmentEncryptionPacketBusiness
+    public class LogicalRecordSegmentEncryptionPacketBusiness : ILogicalRecordSegmentEncryptionPacketBusiness
     {
         public LogicalRecordSegmentEncryptionPacket ReadLogicalRecordSegmentEncryptionPacket(Stream dlisStream)
         {
             if (dlisStream == null) { return null; }
 
-            var sizeBuffer = new byte[2];
-            dlisStream.Read(sizeBuffer, 0, 2);
-
-            var size = BitConverter.ToUInt16(sizeBuffer);
-
-            var companyCodeBuffer = new byte[2];
-            dlisStream.Read(companyCodeBuffer, 0, 2);
-
-            var encryptionInfoBuffer = new byte[size];
-            dlisStream.Read(encryptionInfoBuffer, 0, size);
-
+            var size = dlisStream.ReadUNORM();
             return new LogicalRecordSegmentEncryptionPacket
             {
                 Size = size,
-                CompanyCode = BitConverter.ToUInt16(companyCodeBuffer),
-                EncryptionInfo = encryptionInfoBuffer
+                CompanyCode = dlisStream.ReadUNORM(),
+                EncryptionInfo = dlisStream.ReadBytes(size)
             };
         }
     }
