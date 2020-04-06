@@ -71,27 +71,5 @@ namespace WellLog.Lib.Test.Helpers
             byte expected = 0b_0010_0000;
             Assert.AreEqual(expected, b.ShiftRight(2));
         }
-
-        [Test]
-        public void ByteHelpers_ShiftRightArray_Pass_NullBytes()
-        {
-            byte[] bytes = null;
-            Assert.IsNull(bytes.ShiftRight());
-        }
-
-        [Test]
-        public void ByteHelpers_ShiftRightArray_Pass_ZeroBytes()
-        {
-            var bytes = new byte[0];
-            Assert.AreEqual(bytes, bytes.ShiftRight());
-        }
-
-        [Test]
-        public void ByteHelpers_ShiftRightArray_Pass()
-        {
-            var bytes = new byte[] { 0b_1000_0001, 0b_1000_0001 };
-            var expected = new byte[] { 0b_0100_0000, 0b_1100_0000 };
-            Assert.AreEqual(expected, bytes.ShiftRight());
-        }
     }
 }
