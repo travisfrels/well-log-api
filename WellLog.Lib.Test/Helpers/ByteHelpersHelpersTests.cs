@@ -41,19 +41,35 @@ namespace WellLog.Lib.Test.Helpers
         }
 
         [Test]
-        public void ByteHelpers_IsComponentRole_Pass_True()
+        public void ByteHelpers_HasDlisComponentRole_Pass_True()
         {
             byte attributeDescriptor = 0b_0011_1111;
             byte attributeRole = 0b_0010_0000;
-            Assert.IsTrue(attributeDescriptor.IsComponentRole(attributeRole));
+            Assert.IsTrue(attributeDescriptor.HasDlisComponentRole(attributeRole));
         }
 
         [Test]
-        public void ByteHelpers_IsComponentRole_Pass_False()
+        public void ByteHelpers_HasDlisComponentRole_Pass_False()
         {
             byte setDescriptor = 0b_1111_1000;
             byte attributeRole = 0b_0010_0000;
-            Assert.IsFalse(setDescriptor.IsComponentRole(attributeRole));
+            Assert.IsFalse(setDescriptor.HasDlisComponentRole(attributeRole));
+        }
+
+        [Test]
+        public void ByteHelpers_ShiftLeftByte_Pass()
+        {
+            byte b = 0b_0000_0001;
+            byte expected = 0b_0000_0100;
+            Assert.AreEqual(expected, b.ShiftLeft(2));
+        }
+
+        [Test]
+        public void ByteHelpers_ShiftRightByte_Pass()
+        {
+            byte b = 0b_1000_0000;
+            byte expected = 0b_0010_0000;
+            Assert.AreEqual(expected, b.ShiftRight(2));
         }
     }
 }

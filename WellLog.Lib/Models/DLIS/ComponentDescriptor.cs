@@ -25,13 +25,13 @@ namespace WellLog.Lib.Models.DLIS
 
         private readonly byte _descriptor;
 
-        public bool IsAbsentAttribute => _descriptor.IsComponentRole(ABSENT_ATTRIBUTE_ROLE);
-        public bool IsAttribute => _descriptor.IsComponentRole(ATTRIBUTE_ROLE);
-        public bool IsInvariantAttribute => _descriptor.IsComponentRole(INVARIANT_ATTRIBUTE_ROLE);
-        public bool IsObject => _descriptor.IsComponentRole(OBJECT_ROLE);
-        public bool IsRedundantSet => _descriptor.IsComponentRole(REDUNDANT_SET_ROLE);
-        public bool IsReplacementSet => _descriptor.IsComponentRole(REPLACEMENT_SET_ROLE);
-        public bool IsSet => _descriptor.IsComponentRole(SET_ROLE);
+        public bool IsAbsentAttribute => _descriptor.HasDlisComponentRole(ABSENT_ATTRIBUTE_ROLE);
+        public bool IsAttribute => _descriptor.HasDlisComponentRole(ATTRIBUTE_ROLE);
+        public bool IsInvariantAttribute => _descriptor.HasDlisComponentRole(INVARIANT_ATTRIBUTE_ROLE);
+        public bool IsObject => _descriptor.HasDlisComponentRole(OBJECT_ROLE);
+        public bool IsRedundantSet => _descriptor.HasDlisComponentRole(REDUNDANT_SET_ROLE);
+        public bool IsReplacementSet => _descriptor.HasDlisComponentRole(REPLACEMENT_SET_ROLE);
+        public bool IsSet => _descriptor.HasDlisComponentRole(SET_ROLE);
 
         public bool DoesSetHaveType => (IsSet || IsRedundantSet || IsReplacementSet) ? _descriptor.GetBitUsingMask(SET_TYPE_MASK) : false;
         public bool DoesSetHaveName => (IsSet || IsRedundantSet || IsReplacementSet) ? _descriptor.GetBitUsingMask(SET_NAME_MASK) : false;
