@@ -7,21 +7,28 @@ namespace WellLog.Lib.Business
 {
     public class LogicalRecordSegmentTrailerBusiness : ILogicalRecordSegmentTrailerBusiness
     {
-        public const byte DEFAULT_PADDING = 0;
-        public const ushort DEFAULT_CHECKSUM = 0;
-        public const ushort DEFAULT_TRAILING_LENGTH = 0;
-
-        public LogicalRecordSegmentTrailer ReadLogicalRecordSegmentTrailer(Stream dlisStream, LogicalRecordSegmentHeader logicalRecordSegmentHeader)
+        public LogicalRecordSegmentTrailer ReadLogicalRecordSegmentTrailer(Stream dlisStream, LogicalRecordSegmentHeader header)
         {
             if (dlisStream == null) { return null; }
-            if (logicalRecordSegmentHeader == null) { throw new ArgumentNullException(nameof(logicalRecordSegmentHeader)); }
+            if (dlisStream.IsAtBeginningOfStream()) { return null; }
+            if (header == null) { throw new ArgumentNullException(nameof(header)); }
 
-            return new LogicalRecordSegmentTrailer
+            var trailer = new LogicalRecordSegmentTrailer();
+
+            if (header.TrailingLength) { dlisStream.Seek(-2, SeekOrigin.Current); }
+            if (header.Checksum) { dlisStream.Seek(-2, SeekOrigin.Current); }
+            if (header.Padding)
             {
-                Padding = logicalRecordSegmentHeader.Padding ? dlisStream.ReadUSHORT() : DEFAULT_PADDING,
-                Checksum = logicalRecordSegmentHeader.Checksum ? dlisStream.ReadUNORM() : DEFAULT_CHECKSUM,
-                TrailingLength = logicalRecordSegmentHeader.TrailingLength ? dlisStream.ReadUNORM() : DEFAULT_TRAILING_LENGTH
-            };
+                dlisStream.Seek(-1, SeekOrigin.Current);
+                trailer.PadCount = dlisStream.ReadUSHORT();
+
+                dlisStream.Seek(-trailer.PadCount, SeekOrigin.Current);
+                trailer.Padding = dlisStream.ReadBytes(trailer.PadCount);
+            }
+            if (header.Checksum) { trailer.Checksum = dlisStream.ReadUNORM(); }
+            if (header.TrailingLength) { trailer.TrailingLength = dlisStream.ReadUNORM(); }
+
+            return trailer;
         }
     }
 }

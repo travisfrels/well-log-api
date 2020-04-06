@@ -20,6 +20,12 @@ namespace WellLog.Lib.Helpers
             return buffer;
         }
 
+        public static bool IsAtBeginningOfStream(this Stream s)
+        {
+            if (s == null) { return false; }
+            return s.Position <= 0;
+        }
+
         public static bool IsAtEndOfStream(this Stream s)
         {
             if (s == null) { return false; }
