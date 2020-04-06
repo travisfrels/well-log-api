@@ -1,5 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
+using WellLog.Lib.Helpers;
 using WellLog.Lib.Models.DLIS;
 
 namespace WellLog.Lib.Business
@@ -10,17 +10,11 @@ namespace WellLog.Lib.Business
         {
             if (dlisStream == null) { return null; }
 
-            var logicalRecordSegmentLength = new byte[2];
-            dlisStream.Read(logicalRecordSegmentLength, 0, 2);
-
-            var logicalRecordSegmentAttributes = Convert.ToByte(dlisStream.ReadByte());
-            var logicalRecordType = Convert.ToByte(dlisStream.ReadByte());
-
             return new LogicalRecordSegmentHeader
             {
-                LogicalRecordSegmentLength = BitConverter.ToUInt16(logicalRecordSegmentLength),
-                LogicalRecordSegmentAttributes = logicalRecordSegmentAttributes,
-                LogicalRecordType = logicalRecordType
+                LogicalRecordSegmentLength = dlisStream.ReadUNORM(),
+                LogicalRecordSegmentAttributes = dlisStream.ReadUSHORT(),
+                LogicalRecordType = dlisStream.ReadUSHORT()
             };
         }
     }

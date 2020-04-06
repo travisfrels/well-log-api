@@ -13,7 +13,7 @@ namespace WellLog.Lib.Models.DLIS
         public const byte TRAILING_LENGTH_MASK = 0b_0000_0010;
         public const byte PADDING_MASK = 0b_0000_0001;
 
-        public uint LogicalRecordSegmentLength { get; set; }
+        public ushort LogicalRecordSegmentLength { get; set; }
         public byte LogicalRecordSegmentAttributes { get; set; }
         public byte LogicalRecordType { get; set; }
 
