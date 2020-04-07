@@ -4,6 +4,6 @@ namespace DLIS
 {
     public interface IDlisLogPrinter
     {
-        void PrintLasLog(StorageSet storageSet);
+        void PrintLasLog(StorageUnit storageUnit);
     }
 }

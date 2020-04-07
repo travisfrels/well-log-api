@@ -22,7 +22,7 @@ namespace DLIS
                 var serviceProvider = Initializer.GetServiceProvider();
 
                 var dlisLogFileDataAccess = serviceProvider.GetService<IDlisLogFileDataAccess>();
-                var dlisLog = dlisLogFileDataAccess.Read("sample1.DLIS");
+                var dlisLog = dlisLogFileDataAccess.Read("sample2.DLIS");
 
                 var dlisLogPrinter = serviceProvider.GetService<IDlisLogPrinter>();
                 dlisLogPrinter.PrintLasLog(dlisLog);
