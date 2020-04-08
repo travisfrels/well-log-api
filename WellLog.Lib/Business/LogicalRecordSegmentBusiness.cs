@@ -17,43 +17,36 @@ namespace WellLog.Lib.Business
             _logicalRecordSegmentTrailerBusiness = logicalRecordSegmentTrailerBusiness;
         }
 
-        public int GetTrailerSize(LogicalRecordSegmentHeader header, LogicalRecordSegmentTrailer trailer)
-        {
-            if (header == null) { return 0; }
-            if (trailer == null) { return 0; }
-
-            var trailerSize = 0;
-            if (header.TrailingLength) { trailerSize += 2; }
-            if (header.Checksum) { trailerSize += 2; }
-            if (header.Padding) { trailerSize += trailer.PadCount; }
-
-            return trailerSize;
-        }
-
         public LogicalRecordSegment ReadLogicalRecordSegment(Stream dlisStream)
         {
             if (dlisStream == null) { return null; }
             if (dlisStream.IsAtEndOfStream()) { return null; }
 
             var header = _logicalRecordSegmentHeaderBusiness.ReadLogicalRecordSegmentHeader(dlisStream);
-
-            var isEFLR = header.LogicalRecordStructure;
+            if (header == null) { return null; }
 
             var bodySize = header.LogicalRecordSegmentLength - 4;
 
-            var encryptionPacket = new LogicalRecordSegmentEncryptionPacket();
+            LogicalRecordSegmentEncryptionPacket encryptionPacket = null;
             if (header.EncryptionPacket)
             {
                 encryptionPacket = _logicalRecordSegmentEncryptionPacketBusiness.ReadLogicalRecordSegmentEncryptionPacket(dlisStream);
+                if (encryptionPacket == null) { return null; }
                 bodySize -= encryptionPacket.Size;
             }
 
-            dlisStream.Seek(bodySize, SeekOrigin.Current);
-            var trailer = _logicalRecordSegmentTrailerBusiness.ReadLogicalRecordSegmentTrailer(dlisStream, header);
-            var trailerSize = GetTrailerSize(header, trailer);
-            bodySize -= trailerSize;
+            LogicalRecordSegmentTrailer trailer = null;
+            var trailerSize = 0;
+            if (header.HasTrailer())
+            {
+                dlisStream.Seek(bodySize, SeekOrigin.Current);
+                trailer = _logicalRecordSegmentTrailerBusiness.ReadLogicalRecordSegmentTrailer(dlisStream, header);
+                if (trailer == null) { return null; }
+                trailerSize = header.TrailerSize(trailer);
+                bodySize -= trailerSize;
+                dlisStream.Seek(-(bodySize + trailerSize), SeekOrigin.Current);
+            }
 
-            dlisStream.Seek(-(bodySize + trailerSize), SeekOrigin.Current);
             var body = dlisStream.ReadBytes(bodySize);
             dlisStream.Seek(trailerSize, SeekOrigin.Current);
 

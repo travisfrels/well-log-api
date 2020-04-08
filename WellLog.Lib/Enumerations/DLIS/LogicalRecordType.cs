@@ -13,7 +13,8 @@
         UDI = 8,
         LNAME = 9,
         SPEC = 10,
-        DICT = 11
+        DICT = 11,
+        UNDEFINED = 12
     }
 
     public enum IndirectlyFormattedLogicalRecordType

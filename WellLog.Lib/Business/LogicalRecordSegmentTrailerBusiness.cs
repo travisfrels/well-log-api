@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using WellLog.Lib.Helpers;
 using WellLog.Lib.Models.DLIS;
 
@@ -11,12 +10,14 @@ namespace WellLog.Lib.Business
         {
             if (dlisStream == null) { return null; }
             if (dlisStream.IsAtBeginningOfStream()) { return null; }
-            if (header == null) { throw new ArgumentNullException(nameof(header)); }
+            if (header == null) { return null; }
+            if (!header.HasTrailer()) { return null; }
 
             var trailer = new LogicalRecordSegmentTrailer();
 
             if (header.TrailingLength) { dlisStream.Seek(-2, SeekOrigin.Current); }
             if (header.Checksum) { dlisStream.Seek(-2, SeekOrigin.Current); }
+
             if (header.Padding)
             {
                 dlisStream.Seek(-1, SeekOrigin.Current);
@@ -25,6 +26,7 @@ namespace WellLog.Lib.Business
                 dlisStream.Seek(-trailer.PadCount, SeekOrigin.Current);
                 trailer.Padding = dlisStream.ReadBytes(trailer.PadCount);
             }
+
             if (header.Checksum) { trailer.Checksum = dlisStream.ReadUNORM(); }
             if (header.TrailingLength) { trailer.TrailingLength = dlisStream.ReadUNORM(); }
 

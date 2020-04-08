@@ -31,5 +31,11 @@ namespace WellLog.Lib.Helpers
             if (s == null) { return false; }
             return s.Position >= s.Length;
         }
+
+        public static long BytesRemaining(this Stream s)
+        {
+            if (s == null) { return 0; }
+            return s.Length - s.Position;
+        }
     }
 }

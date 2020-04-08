@@ -26,10 +26,7 @@ namespace WellLog.Lib.Test.Business
         public void LogicalRecordSegmentHeaderBusiness_ReadLogicalRecordSegmentHeader_Pass_EmptyStream()
         {
             var dlisStream = new MemoryStream();
-            var result = _logicalRecordSegmentHeaderBusiness.ReadLogicalRecordSegmentHeader(dlisStream);
-            Assert.AreEqual(0, result.LogicalRecordSegmentLength);
-            Assert.AreEqual(0, result.LogicalRecordSegmentAttributes);
-            Assert.AreEqual(0, result.LogicalRecordType);
+            Assert.IsNull(_logicalRecordSegmentHeaderBusiness.ReadLogicalRecordSegmentHeader(dlisStream));
         }
 
         [Test]
