@@ -1,8 +1,12 @@
-﻿namespace WellLog.Lib.Models.DLIS
+﻿using System.Collections.Generic;
+
+namespace WellLog.Lib.Models.DLIS
 {
     public class LogicalRecordSegmentTrailer
     {
-        public uint Checksum { get; set; }
-        public uint LogicalRecordSegmentLength { get; set; }
+        public IEnumerable<byte> Padding { get; set; }
+        public byte PadCount { get; set; }
+        public ushort Checksum { get; set; }
+        public ushort TrailingLength { get; set; }
     }
 }

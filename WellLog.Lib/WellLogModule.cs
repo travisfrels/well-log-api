@@ -9,7 +9,6 @@ namespace WellLog.Lib
     {
         public static void RegisterTypes(IServiceCollection serviceCollection)
         {
-
             /* Business */
             serviceCollection.AddScoped<ILasLogBusiness, LasLogBusiness>();
             serviceCollection.AddScoped<ILasSectionBusiness, LasSectionBusiness>();
@@ -17,11 +16,20 @@ namespace WellLog.Lib
             serviceCollection.AddScoped<IAsciiLogDataBusiness, AsciiLogDataBusiness>();
             serviceCollection.AddScoped<IWellInformationBusiness, WellInformationBusiness>();
 
+            serviceCollection.AddScoped<IStorageUnitLabelBusiness, StorageUnitLabelBusiness>();
+            serviceCollection.AddScoped<IStorageUnitBusiness, StorageUnitBusiness>();
+            serviceCollection.AddScoped<IVisibleRecordBusiness, VisibleRecordBusiness>();
+            serviceCollection.AddScoped<ILogicalRecordSegmentHeaderBusiness, LogicalRecordSegmentHeaderBusiness>();
+            serviceCollection.AddScoped<ILogicalRecordSegmentEncryptionPacketBusiness, LogicalRecordSegmentEncryptionPacketBusiness>();
+            serviceCollection.AddScoped<ILogicalRecordSegmentTrailerBusiness, LogicalRecordSegmentTrailerBusiness>();
+            serviceCollection.AddScoped<ILogicalRecordSegmentBusiness, LogicalRecordSegmentBusiness>();
+
             /* Validators */
             serviceCollection.AddScoped<ILasLogValidator, LasLogValidator>();
 
             /* Data Access */
             serviceCollection.AddScoped<ILasLogFileDataAccess, LasLogFileDataAccess>();
+            serviceCollection.AddScoped<IDlisLogFileDataAccess, DlisLogFileDataAccess>();
         }
     }
 }
