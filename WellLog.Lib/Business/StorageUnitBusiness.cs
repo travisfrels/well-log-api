@@ -9,12 +9,12 @@ namespace WellLog.Lib.Business
     public class StorageUnitBusiness : IStorageUnitBusiness
     {
         private readonly IStorageUnitLabelBusiness _storageUnitLabelBusiness;
-        private readonly ILogicalRecordSegmentBusiness _logicalRecordSegmentBusiness;
+        private readonly IVisibleRecordBusiness _visibleRecordBusiness;
 
-        public StorageUnitBusiness(IStorageUnitLabelBusiness storageUnitLabelBusiness, ILogicalRecordSegmentBusiness logicalRecordSegmentBusiness)
+        public StorageUnitBusiness(IStorageUnitLabelBusiness storageUnitLabelBusiness, IVisibleRecordBusiness visibleRecordBusiness)
         {
             _storageUnitLabelBusiness = storageUnitLabelBusiness;
-            _logicalRecordSegmentBusiness = logicalRecordSegmentBusiness;
+            _visibleRecordBusiness = visibleRecordBusiness;
         }
 
         public StorageUnit ReadStorageUnit(Stream dlisStream)
@@ -23,23 +23,9 @@ namespace WellLog.Lib.Business
 
             var label = _storageUnitLabelBusiness.ReadStorageUnitLabel(dlisStream);
             var visibleRecords = new List<VisibleRecord>();
-
             while (!dlisStream.IsAtEndOfStream())
             {
-                var vr = new VisibleRecord
-                {
-                    Length = dlisStream.ReadUNORM(),
-                    FormatVersionField1 = dlisStream.ReadUSHORT(),
-                    FormatVersionField2 = dlisStream.ReadUSHORT()
-                };
-
-
-                if (vr.FormatVersionField1 != 255 || vr.FormatVersionField2 != 1) { throw new Exception("invalid visible record format"); }
-
-                vr.Data = dlisStream.ReadBytes(vr.Length - 4);
-                if (vr.Data == null) { throw new Exception("invalid visible record length"); }
-
-                visibleRecords.Add(vr);
+                visibleRecords.Add(_visibleRecordBusiness.ReadVisibleRecord(dlisStream));
             }
 
             return new StorageUnit

@@ -36,6 +36,9 @@ namespace WellLog.Lib.Business
             if (dlisStream.IsAtEndOfStream()) { return null; }
 
             var header = _logicalRecordSegmentHeaderBusiness.ReadLogicalRecordSegmentHeader(dlisStream);
+
+            var isEFLR = header.LogicalRecordStructure;
+
             var bodySize = header.LogicalRecordSegmentLength - 4;
 
             var encryptionPacket = new LogicalRecordSegmentEncryptionPacket();

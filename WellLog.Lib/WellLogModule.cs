@@ -18,6 +18,7 @@ namespace WellLog.Lib
 
             serviceCollection.AddScoped<IStorageUnitLabelBusiness, StorageUnitLabelBusiness>();
             serviceCollection.AddScoped<IStorageUnitBusiness, StorageUnitBusiness>();
+            serviceCollection.AddScoped<IVisibleRecordBusiness, VisibleRecordBusiness>();
             serviceCollection.AddScoped<ILogicalRecordSegmentHeaderBusiness, LogicalRecordSegmentHeaderBusiness>();
             serviceCollection.AddScoped<ILogicalRecordSegmentEncryptionPacketBusiness, LogicalRecordSegmentEncryptionPacketBusiness>();
             serviceCollection.AddScoped<ILogicalRecordSegmentTrailerBusiness, LogicalRecordSegmentTrailerBusiness>();
