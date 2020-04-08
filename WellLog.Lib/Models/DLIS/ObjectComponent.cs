@@ -2,6 +2,6 @@
 {
     public class ObjectComponent : Component
     {
-        public string Name { get; set; }
+        public OBNAME Name { get; set; }
     }
 }

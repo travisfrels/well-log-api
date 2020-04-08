@@ -5,7 +5,7 @@ using WellLog.Lib.Models.DLIS;
 
 namespace WellLog.Lib.Helpers
 {
-    public static class DlisStreamHelpers
+    public static class DlisRepresentationCodeHelpers
     {
         public static ushort FSHORT_EXP_MASK = 0x000F;
         public static int FSHORT_EXP_SIZE = 4;
