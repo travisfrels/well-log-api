@@ -18,10 +18,10 @@ namespace WellLog.Lib.Models.DLIS
         public const byte OBJ_NAME_MASK = 0b_0001_0000;
 
         public const byte ATTR_LABEL_MASK = 0b_0001_0000;
-        public const byte ATTR_COUNT_MASK = 0b_0001_0000;
-        public const byte ATTR_REPRESENTATION_CODE_MASK = 0b_0001_0000;
-        public const byte ATTR_UNITS_MASK = 0b_0001_0000;
-        public const byte ATTR_VALUE_MASK = 0b_0001_0000;
+        public const byte ATTR_COUNT_MASK = 0b_0000_1000;
+        public const byte ATTR_REPRESENTATION_CODE_MASK = 0b_0000_0100;
+        public const byte ATTR_UNITS_MASK = 0b_0000_0010;
+        public const byte ATTR_VALUE_MASK = 0b_0000_0001;
 
         private readonly byte _descriptor;
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using WellLog.Lib.Helpers;
 using WellLog.Lib.Models.DLIS;
@@ -50,20 +51,7 @@ namespace WellLog.Lib.Business
                 dlisStream.Seek(-(bodySize + trailerSize), SeekOrigin.Current);
             }
 
-            var body = new List<Component>();
-            using (var bodyStream = new MemoryStream(dlisStream.ReadBytes(bodySize)))
-            {
-                var component = _componentBusiness.ReadComponent(bodyStream);
-                while(component != null)
-                {
-                    body.Add(component);
-                    if (component.IsFileHeaderLogicalRecord())
-                    {
-                        body.AddRange(_componentBusiness.ReadFileHeaderLogicalRecord(bodyStream));
-                    }
-                    component = _componentBusiness.ReadComponent(bodyStream);
-                }
-            }
+            var body = dlisStream.ReadBytes(bodySize);
             dlisStream.Seek(trailerSize, SeekOrigin.Current);
 
             return new LogicalRecordSegment
