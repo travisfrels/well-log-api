@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using WellLog.Lib.Helpers;
 using WellLog.Lib.Models.DLIS;
 
@@ -9,12 +10,14 @@ namespace WellLog.Lib.Business
         private readonly ILogicalRecordSegmentHeaderBusiness _logicalRecordSegmentHeaderBusiness;
         private readonly ILogicalRecordSegmentEncryptionPacketBusiness _logicalRecordSegmentEncryptionPacketBusiness;
         private readonly ILogicalRecordSegmentTrailerBusiness _logicalRecordSegmentTrailerBusiness;
+        private readonly IComponentBusiness _componentBusiness;
 
-        public LogicalRecordSegmentBusiness(ILogicalRecordSegmentHeaderBusiness logicalRecordSegmentHeaderBusiness, ILogicalRecordSegmentEncryptionPacketBusiness logicalRecordSegmentEncryptionPacketBusiness, ILogicalRecordSegmentTrailerBusiness logicalRecordSegmentTrailerBusiness)
+        public LogicalRecordSegmentBusiness(ILogicalRecordSegmentHeaderBusiness logicalRecordSegmentHeaderBusiness, ILogicalRecordSegmentEncryptionPacketBusiness logicalRecordSegmentEncryptionPacketBusiness, ILogicalRecordSegmentTrailerBusiness logicalRecordSegmentTrailerBusiness, IComponentBusiness componentBusiness)
         {
             _logicalRecordSegmentHeaderBusiness = logicalRecordSegmentHeaderBusiness;
             _logicalRecordSegmentEncryptionPacketBusiness = logicalRecordSegmentEncryptionPacketBusiness;
             _logicalRecordSegmentTrailerBusiness = logicalRecordSegmentTrailerBusiness;
+            _componentBusiness = componentBusiness;
         }
 
         public LogicalRecordSegment ReadLogicalRecordSegment(Stream dlisStream)
@@ -47,7 +50,20 @@ namespace WellLog.Lib.Business
                 dlisStream.Seek(-(bodySize + trailerSize), SeekOrigin.Current);
             }
 
-            var body = dlisStream.ReadBytes(bodySize);
+            var body = new List<Component>();
+            using (var bodyStream = new MemoryStream(dlisStream.ReadBytes(bodySize)))
+            {
+                var component = _componentBusiness.ReadComponent(bodyStream);
+                while(component != null)
+                {
+                    body.Add(component);
+                    if (component.IsFileHeaderLogicalRecord())
+                    {
+                        body.AddRange(_componentBusiness.ReadFileHeaderLogicalRecord(bodyStream));
+                    }
+                    component = _componentBusiness.ReadComponent(bodyStream);
+                }
+            }
             dlisStream.Seek(trailerSize, SeekOrigin.Current);
 
             return new LogicalRecordSegment

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using WellLog.Lib.Enumerations.DLIS;
 using WellLog.Lib.Helpers;
@@ -8,6 +9,48 @@ namespace WellLog.Lib.Business
 {
     public class ComponentBusiness : IComponentBusiness
     {
+        public IEnumerable<Component> ReadFileHeaderLogicalRecord(Stream dlisStream)
+        {
+            if (dlisStream == null || dlisStream.IsAtEndOfStream()) { return null; }
+
+            return new List<Component>
+            {
+                new AttributeComponent<string>
+                {
+                    Descriptor = new ComponentDescriptor(dlisStream.ReadUSHORT()),
+                    Label = dlisStream.ReadASCII(),
+                    RepresentationCode = dlisStream.ReadUSHORT()
+                },
+
+                new AttributeComponent<string>
+                {
+                    Descriptor = new ComponentDescriptor(dlisStream.ReadUSHORT()),
+                    Label = dlisStream.ReadASCII(),
+                    RepresentationCode = dlisStream.ReadUSHORT()
+                },
+
+                new ObjectComponent
+                {
+                    Descriptor = new ComponentDescriptor(dlisStream.ReadUSHORT()),
+                    Name = dlisStream.ReadOBNAME()
+                },
+
+                new AttributeComponent<string>
+                {
+                    Descriptor = new ComponentDescriptor(dlisStream.ReadUSHORT()),
+                    Count = 1,
+                    Value = new string[1] { dlisStream.ReadASCII() }
+                },
+
+                new AttributeComponent<string>
+                {
+                    Descriptor = new ComponentDescriptor(dlisStream.ReadUSHORT()),
+                    Count = 1,
+                    Value = new string[1] { dlisStream.ReadASCII() }
+                }
+            };
+        }
+
         public Component ReadComponent(Stream dlisStream)
         {
             if (dlisStream == null || dlisStream.IsAtEndOfStream()) { return null; }
@@ -15,29 +58,25 @@ namespace WellLog.Lib.Business
             var descriptor = new ComponentDescriptor(dlisStream.ReadUSHORT());
             if (descriptor.IsSet || descriptor.IsRedundantSet || descriptor.IsReplacementSet)
             {
-                return new SetComponent
-                {
-                    Descriptor = descriptor,
-                    Type = dlisStream.ReadIDENT(),
-                    Name = dlisStream.ReadIDENT()
-                };
+                var setComponent = new SetComponent { Descriptor = descriptor };
+                if (descriptor.DoesSetHaveType) { setComponent.Type = dlisStream.ReadIDENT(); }
+                if (descriptor.DoesSetHaveName) { setComponent.Name = dlisStream.ReadIDENT(); }
+                return setComponent;
             }
 
             if (descriptor.IsObject)
             {
-                return new ObjectComponent
-                {
-                    Descriptor = descriptor,
-                    Name = dlisStream.ReadOBNAME()
-                };
+                var objComponent = new ObjectComponent { Descriptor = descriptor };
+                if (descriptor.DoesObjectHaveName) { objComponent.Name = dlisStream.ReadOBNAME(); }
+                return objComponent;
             }
 
             if (descriptor.IsAttribute || descriptor.IsInvariantAttribute)
             {
-                var label = dlisStream.ReadIDENT();
-                var count = dlisStream.ReadUVARI();
-                var representationCode = dlisStream.ReadUSHORT();
-                var units = dlisStream.ReadUNITS();
+                string label = descriptor.DoesAttributeHaveLabel ? dlisStream.ReadIDENT() : null;
+                uint count = descriptor.DoesAttributeHaveCount ? dlisStream.ReadUVARI() : 1;
+                byte representationCode = dlisStream.ReadUSHORT();
+                string units = descriptor.DoesAttributeHaveUnits ? dlisStream.ReadUNITS() : null;
 
                 switch ((RepresentationCode)representationCode)
                 {
