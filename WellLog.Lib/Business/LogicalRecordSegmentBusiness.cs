@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using WellLog.Lib.Helpers;
 using WellLog.Lib.Models.DLIS;
 
@@ -11,14 +9,12 @@ namespace WellLog.Lib.Business
         private readonly ILogicalRecordSegmentHeaderBusiness _logicalRecordSegmentHeaderBusiness;
         private readonly ILogicalRecordSegmentEncryptionPacketBusiness _logicalRecordSegmentEncryptionPacketBusiness;
         private readonly ILogicalRecordSegmentTrailerBusiness _logicalRecordSegmentTrailerBusiness;
-        private readonly IComponentBusiness _componentBusiness;
 
-        public LogicalRecordSegmentBusiness(ILogicalRecordSegmentHeaderBusiness logicalRecordSegmentHeaderBusiness, ILogicalRecordSegmentEncryptionPacketBusiness logicalRecordSegmentEncryptionPacketBusiness, ILogicalRecordSegmentTrailerBusiness logicalRecordSegmentTrailerBusiness, IComponentBusiness componentBusiness)
+        public LogicalRecordSegmentBusiness(ILogicalRecordSegmentHeaderBusiness logicalRecordSegmentHeaderBusiness, ILogicalRecordSegmentEncryptionPacketBusiness logicalRecordSegmentEncryptionPacketBusiness, ILogicalRecordSegmentTrailerBusiness logicalRecordSegmentTrailerBusiness)
         {
             _logicalRecordSegmentHeaderBusiness = logicalRecordSegmentHeaderBusiness;
             _logicalRecordSegmentEncryptionPacketBusiness = logicalRecordSegmentEncryptionPacketBusiness;
             _logicalRecordSegmentTrailerBusiness = logicalRecordSegmentTrailerBusiness;
-            _componentBusiness = componentBusiness;
         }
 
         public LogicalRecordSegment ReadLogicalRecordSegment(Stream dlisStream)

@@ -1,9 +1,10 @@
-﻿using WellLog.Lib.Models.DLIS;
+﻿using System.Collections.Generic;
+using WellLog.Lib.Models.DLIS;
 
 namespace WellLog.Lib.DataAccess
 {
     public interface IDlisLogFileDataAccess
     {
-        StorageUnit Read(string fileName);
+        IEnumerable<ExplicitlyFormattedLogicalRecord> Read(string fileName);
     }
 }

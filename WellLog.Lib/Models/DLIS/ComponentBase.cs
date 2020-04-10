@@ -3,5 +3,6 @@
     public abstract class ComponentBase
     {
         public ComponentDescriptor Descriptor { get; set; }
+        public long StartPosition { get; set; }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using WellLog.Lib.Enumerations.DLIS;
 using WellLog.Lib.Helpers;
@@ -14,14 +13,15 @@ namespace WellLog.Lib.Business
         public const byte DEFAULT_REP_CODE = 19;
         public const string DEFAULT_UNITS = "";
 
-        public ComponentBase ReadComponent(Stream dlisStream, RepresentationCode valueRepCode)
+        public ComponentBase ReadComponent(Stream dlisStream, AttributeComponent template = null)
         {
             if (dlisStream == null || dlisStream.IsAtEndOfStream()) { return null; }
 
+            var startPosition = dlisStream.Position;
             var descriptor = new ComponentDescriptor(dlisStream.ReadUSHORT());
             if (descriptor.IsSet || descriptor.IsRedundantSet || descriptor.IsReplacementSet)
             {
-                var setComponent = new SetComponent { Descriptor = descriptor };
+                var setComponent = new SetComponent { Descriptor = descriptor, StartPosition = startPosition };
                 if (descriptor.DoesSetHaveType) { setComponent.Type = dlisStream.ReadIDENT(); }
                 if (descriptor.DoesSetHaveName) { setComponent.Name = dlisStream.ReadIDENT(); }
                 return setComponent;
@@ -29,289 +29,329 @@ namespace WellLog.Lib.Business
 
             if (descriptor.IsObject)
             {
-                var objComponent = new ObjectComponent { Descriptor = descriptor };
+                var objComponent = new ObjectComponent { Descriptor = descriptor, StartPosition = startPosition };
                 if (descriptor.DoesObjectHaveName) { objComponent.Name = dlisStream.ReadOBNAME(); }
                 return objComponent;
             }
 
             if (descriptor.IsAttribute || descriptor.IsInvariantAttribute)
             {
-                string label = descriptor.DoesAttributeHaveLabel ? dlisStream.ReadIDENT() : DEFAULT_LABEL;
-                uint count = descriptor.DoesAttributeHaveCount ? dlisStream.ReadUVARI() : DEFAULT_COUNT;
-                byte representationCode = descriptor.DoesAttributeHaveRepresentationCode ? dlisStream.ReadUSHORT() : DEFAULT_REP_CODE;
-                string units = descriptor.DoesAttributeHaveUnits ? dlisStream.ReadUNITS() : DEFAULT_UNITS;
+                string label = descriptor.DoesAttributeHaveLabel ? dlisStream.ReadIDENT() : (template == null ? DEFAULT_LABEL : template.Label);
+                uint count = descriptor.DoesAttributeHaveCount ? dlisStream.ReadUVARI() : (template == null ? DEFAULT_COUNT : template.Count);
+                byte representationCode = descriptor.DoesAttributeHaveRepresentationCode ? dlisStream.ReadUSHORT() : (template == null ? DEFAULT_REP_CODE : template.RepresentationCode);
+                string units = descriptor.DoesAttributeHaveUnits ? dlisStream.ReadUNITS() : (template == null ? DEFAULT_UNITS : template.Units);
 
-                switch (valueRepCode)
+                if (template == null || !descriptor.DoesAttributeHaveValue)
+                {
+                    return new AttributeComponent
+                    {
+                        Descriptor = descriptor,
+                        StartPosition = startPosition,
+                        Label = label,
+                        Count = count,
+                        RepresentationCode = representationCode,
+                        Units = units
+                    };
+                }
+
+                switch ((RepresentationCode)representationCode)
                 {
                     case RepresentationCode.FSHORT:
-                        return new AttributeComponent<float>
+                        return new ValueAttributeComponent<float>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadFSHORT(count) : null
+                            Value = dlisStream.ReadFSHORT(count)
                         };
                     case RepresentationCode.FSINGL:
-                        return new AttributeComponent<float>
+                        return new ValueAttributeComponent<float>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadFSINGL(count) : null
+                            Value = dlisStream.ReadFSINGL(count)
                         };
                     case RepresentationCode.FSING1:
-                        return new AttributeComponent<FSING1>
+                        return new ValueAttributeComponent<FSING1>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadFSING1(count) : null
+                            Value = dlisStream.ReadFSING1(count)
                         };
                     case RepresentationCode.FSING2:
-                        return new AttributeComponent<FSING2>
+                        return new ValueAttributeComponent<FSING2>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadFSING2(count) : null
+                            Value = dlisStream.ReadFSING2(count)
                         };
                     case RepresentationCode.ISINGL:
-                        return new AttributeComponent<float>
+                        return new ValueAttributeComponent<float>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadISINGL(count) : null
+                            Value = dlisStream.ReadISINGL(count)
                         };
                     case RepresentationCode.VSINGL:
-                        return new AttributeComponent<float>
+                        return new ValueAttributeComponent<float>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadVSINGL(count) : null
+                            Value = dlisStream.ReadVSINGL(count)
                         };
                     case RepresentationCode.FDOUBL:
-                        return new AttributeComponent<double>
+                        return new ValueAttributeComponent<double>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadFDOUBL(count) : null
+                            Value = dlisStream.ReadFDOUBL(count)
                         };
                     case RepresentationCode.FDOUB1:
-                        return new AttributeComponent<FDOUB1>
+                        return new ValueAttributeComponent<FDOUB1>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadFDOUB1(count) : null
+                            Value = dlisStream.ReadFDOUB1(count)
                         };
                     case RepresentationCode.FDOUB2:
-                        return new AttributeComponent<FDOUB2>
+                        return new ValueAttributeComponent<FDOUB2>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadFDOUB2(count) : null
+                            Value = dlisStream.ReadFDOUB2(count)
                         };
                     case RepresentationCode.CSINGL:
-                        return new AttributeComponent<CSINGL>
+                        return new ValueAttributeComponent<CSINGL>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadCSINGL(count) : null
+                            Value = dlisStream.ReadCSINGL(count)
                         };
                     case RepresentationCode.CDOUBL:
-                        return new AttributeComponent<CDOUBL>
+                        return new ValueAttributeComponent<CDOUBL>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadCDOUBL(count) : null
+                            Value = dlisStream.ReadCDOUBL(count)
                         };
                     case RepresentationCode.SSHORT:
-                        return new AttributeComponent<sbyte>
+                        return new ValueAttributeComponent<sbyte>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadSSHORT(count) : null
+                            Value = dlisStream.ReadSSHORT(count)
                         };
                     case RepresentationCode.SNORM:
-                        return new AttributeComponent<short>
+                        return new ValueAttributeComponent<short>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadSNORM(count) : null
+                            Value = dlisStream.ReadSNORM(count)
                         };
                     case RepresentationCode.SLONG:
-                        return new AttributeComponent<int>
+                        return new ValueAttributeComponent<int>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadSLONG(count) : null
+                            Value = dlisStream.ReadSLONG(count)
                         };
                     case RepresentationCode.USHORT:
-                        return new AttributeComponent<byte>
+                        return new ValueAttributeComponent<byte>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadUSHORT(count) : null
+                            Value = dlisStream.ReadUSHORT(count)
                         };
                     case RepresentationCode.UNORM:
-                        return new AttributeComponent<ushort>
+                        return new ValueAttributeComponent<ushort>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadUNORM(count) : null
+                            Value = dlisStream.ReadUNORM(count)
                         };
                     case RepresentationCode.ULONG:
-                        return new AttributeComponent<uint>
+                        return new ValueAttributeComponent<uint>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadULONG(count) : null
+                            Value = dlisStream.ReadULONG(count)
                         };
                     case RepresentationCode.UVARI:
-                        return new AttributeComponent<uint>
+                        return new ValueAttributeComponent<uint>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadUVARI(count) : null
+                            Value = dlisStream.ReadUVARI(count)
                         };
                     case RepresentationCode.IDENT:
-                        return new AttributeComponent<string>
+                        return new ValueAttributeComponent<string>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadIDENT(count) : null
+                            Value = dlisStream.ReadIDENT(count)
                         };
                     case RepresentationCode.ASCII:
-                        return new AttributeComponent<string>
+                        return new ValueAttributeComponent<string>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadASCII(count) : null
+                            Value = dlisStream.ReadASCII(count)
                         };
                     case RepresentationCode.DTIME:
-                        return new AttributeComponent<DateTime>
+                        return new ValueAttributeComponent<DateTime>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadDTIME(count) : null
+                            Value = dlisStream.ReadDTIME(count)
                         };
                     case RepresentationCode.ORIGIN:
-                        return new AttributeComponent<uint>
+                        return new ValueAttributeComponent<uint>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadUVARI(count) : null
+                            Value = dlisStream.ReadUVARI(count)
                         };
                     case RepresentationCode.OBNAME:
-                        return new AttributeComponent<OBNAME>
+                        return new ValueAttributeComponent<OBNAME>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadOBNAME(count) : null
+                            Value = dlisStream.ReadOBNAME(count)
                         };
                     case RepresentationCode.OBJREF:
-                        return new AttributeComponent<OBJREF>
+                        return new ValueAttributeComponent<OBJREF>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadOBJREF(count) : null
+                            Value = dlisStream.ReadOBJREF(count)
                         };
                     case RepresentationCode.ATTREF:
-                        return new AttributeComponent<ATTREF>
+                        return new ValueAttributeComponent<ATTREF>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadATTREF(count) : null
+                            Value = dlisStream.ReadATTREF(count)
                         };
                     case RepresentationCode.STATUS:
-                        return new AttributeComponent<bool>
+                        return new ValueAttributeComponent<bool>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadSTATUS(count) : null
+                            Value = dlisStream.ReadSTATUS(count)
                         };
                     case RepresentationCode.UNITS:
-                        return new AttributeComponent<string>
+                        return new ValueAttributeComponent<string>
                         {
                             Descriptor = descriptor,
+                            StartPosition = startPosition,
                             Label = label,
                             Count = count,
                             RepresentationCode = representationCode,
                             Units = units,
-                            Value = descriptor.DoesAttributeHaveValue ? dlisStream.ReadUNITS(count) : null
+                            Value = dlisStream.ReadUNITS(count)
                         };
                 }
             }

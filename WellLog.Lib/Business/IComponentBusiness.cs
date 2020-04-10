@@ -7,6 +7,6 @@ namespace WellLog.Lib.Business
 {
     public interface IComponentBusiness
     {
-        ComponentBase ReadComponent(Stream dlisStream, RepresentationCode valueRepCode);
+        ComponentBase ReadComponent(Stream dlisStream, AttributeComponent template = null);
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Moq;
 using NUnit.Framework;
 using System.IO;
-using System.Linq;
 using WellLog.Lib.Business;
 using WellLog.Lib.Models.DLIS;
 

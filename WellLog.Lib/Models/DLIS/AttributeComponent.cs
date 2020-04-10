@@ -2,7 +2,7 @@
 
 namespace WellLog.Lib.Models.DLIS
 {
-    public abstract class AttributeComponentBase : ComponentBase
+    public class AttributeComponent : ComponentBase
     {
         public string Label { get; set; }
         public uint Count { get; set; }
@@ -10,7 +10,7 @@ namespace WellLog.Lib.Models.DLIS
         public string Units { get; set; }
     }
 
-    public class AttributeComponent<T> : AttributeComponentBase
+    public class ValueAttributeComponent<T> : AttributeComponent
     {
         public IEnumerable<T> Value { get; set; }
     }
