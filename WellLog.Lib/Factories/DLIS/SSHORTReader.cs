@@ -6,9 +6,16 @@ namespace WellLog.Lib.Factories.DLIS
 {
     public class SSHORTReader : IValueReader
     {
+        public sbyte ReadSSHORT(Stream s)
+        {
+            if (s == null || s.BytesRemaining() < 1) { return 0; }
+            return s.ReadBytes(1).ConvertToSbyte();
+        }
+
         public IEnumerable ReadValues(Stream s, uint count)
         {
-            foreach (var v in s.ReadSSHORT(count)) { yield return v; }
+            if (s == null || s.BytesRemaining() < (count * 1)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return ReadSSHORT(s); }
         }
     }
 }

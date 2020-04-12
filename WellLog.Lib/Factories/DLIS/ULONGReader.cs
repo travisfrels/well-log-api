@@ -6,9 +6,16 @@ namespace WellLog.Lib.Factories.DLIS
 {
     public class ULONGReader : IValueReader
     {
+        public uint ReadULONG(Stream s)
+        {
+            if (s == null || s.BytesRemaining() < 4) { return 0; }
+            return s.ReadBytes(4).ConvertToUInt(false);
+        }
+
         public IEnumerable ReadValues(Stream s, uint count)
         {
-            foreach (var v in s.ReadULONG(count)) { yield return v; }
+            if (s == null || s.BytesRemaining() < (count * 4)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return ReadULONG(s); }
         }
     }
 }

@@ -1,14 +1,30 @@
 ﻿using System.Collections;
 using System.IO;
+using System.Text;
 using WellLog.Lib.Helpers;
 
 namespace WellLog.Lib.Factories.DLIS
 {
     public class UNITSReader : IValueReader
     {
+        public string ReadUNITS(Stream s)
+        {
+            if (s == null || s.BytesRemaining() < 1) { return null; }
+
+            var length = s.ReadByte();
+            if (length < 0) { return null; }
+            if (length == 0) { return string.Empty; }
+
+            var buffer = s.ReadBytes(length);
+            if (buffer == null) { return null; }
+
+            return Encoding.ASCII.GetString(buffer);
+        }
+
         public IEnumerable ReadValues(Stream s, uint count)
         {
-            foreach (var v in s.ReadUNITS(count)) { yield return v; }
+            if (s == null || s.BytesRemaining() < (count * 1)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return ReadUNITS(s); }
         }
     }
 }

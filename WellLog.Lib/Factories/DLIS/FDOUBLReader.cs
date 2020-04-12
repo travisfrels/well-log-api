@@ -6,9 +6,16 @@ namespace WellLog.Lib.Factories.DLIS
 {
     public class FDOUBLReader : IValueReader
     {
+        public double ReadFDOUBL(Stream s)
+        {
+            if (s == null || s.BytesRemaining() < 8) { return 0d; }
+            return s.ReadBytes(8).ConvertToDouble(false);
+        }
+
         public IEnumerable ReadValues(Stream s, uint count)
         {
-            foreach (var v in s.ReadFDOUBL(count)) { yield return v; }
+            if (s == null || s.BytesRemaining() < (count * 8)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return ReadFDOUBL(s); }
         }
     }
 }

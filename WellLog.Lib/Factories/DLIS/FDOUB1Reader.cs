@@ -1,14 +1,33 @@
 ﻿using System.Collections;
 using System.IO;
 using WellLog.Lib.Helpers;
+using WellLog.Lib.Models.DLIS;
 
 namespace WellLog.Lib.Factories.DLIS
 {
     public class FDOUB1Reader : IValueReader
     {
+        private readonly FDOUBLReader _fdoublReader;
+
+        public FDOUB1Reader(FDOUBLReader fdoublReader)
+        {
+            _fdoublReader = fdoublReader;
+        }
+
+        public FDOUB1 ReadFDOUB1(Stream s)
+        {
+            if (s == null || s.BytesRemaining() < 16) { return null; }
+            return new FDOUB1
+            {
+                V = _fdoublReader.ReadFDOUBL(s),
+                A = _fdoublReader.ReadFDOUBL(s)
+            };
+        }
+
         public IEnumerable ReadValues(Stream s, uint count)
         {
-            foreach (var v in s.ReadFDOUB1(count)) { yield return v; }
+            if (s == null || s.BytesRemaining() < (count * 16)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return ReadFDOUB1(s); }
         }
     }
 }

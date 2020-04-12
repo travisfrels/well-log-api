@@ -6,9 +6,16 @@ namespace WellLog.Lib.Factories.DLIS
 {
     public class UNORMReader : IValueReader
     {
+        public ushort ReadUNORM(Stream s)
+        {
+            if (s == null || s.BytesRemaining() < 2) { return 0; }
+            return s.ReadBytes(2).ConvertToUshort(false);
+        }
+
         public IEnumerable ReadValues(Stream s, uint count)
         {
-            foreach (var v in s.ReadUNORM(count)) { yield return v; }
+            if (s == null || s.BytesRemaining() < (count * 2)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return ReadUNORM(s); }
         }
     }
 }
