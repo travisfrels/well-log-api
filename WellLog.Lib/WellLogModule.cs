@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using WellLog.Lib.Business;
 using WellLog.Lib.DataAccess;
+using WellLog.Lib.Factories.DLIS;
 using WellLog.Lib.Validators;
 
 namespace WellLog.Lib
@@ -32,6 +33,9 @@ namespace WellLog.Lib
             /* Data Access */
             serviceCollection.AddScoped<ILasLogFileDataAccess, LasLogFileDataAccess>();
             serviceCollection.AddScoped<IDlisLogFileDataAccess, DlisLogFileDataAccess>();
+
+            /* Factories */
+            ValueReaderFactory.RegisterReaders();
         }
     }
 }

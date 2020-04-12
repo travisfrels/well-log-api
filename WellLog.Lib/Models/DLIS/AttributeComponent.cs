@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
 
 namespace WellLog.Lib.Models.DLIS
 {
@@ -8,10 +8,6 @@ namespace WellLog.Lib.Models.DLIS
         public uint Count { get; set; }
         public byte RepresentationCode { get; set; }
         public string Units { get; set; }
-    }
-
-    public class ValueAttributeComponent<T> : AttributeComponent
-    {
-        public IEnumerable<T> Value { get; set; }
+        public IEnumerable Value { get; set; }
     }
 }

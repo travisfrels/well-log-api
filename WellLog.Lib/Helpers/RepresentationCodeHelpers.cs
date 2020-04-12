@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using WellLog.Lib.Models.DLIS;
@@ -44,13 +45,10 @@ namespace WellLog.Lib.Helpers
             return Convert.ToSingle(mantissa * (1 << exponent));
         }
 
-        public static float[] ReadFSHORT(this Stream dlisStream, uint count)
+        public static IEnumerable<float> ReadFSHORT(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 2)) { return null; }
-
-            var response = new float[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadFSHORT(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 2)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadFSHORT(); }
         }
 
         public static float ReadFSINGL(this Stream dlisStream)
@@ -59,13 +57,10 @@ namespace WellLog.Lib.Helpers
             return dlisStream.ReadBytes(4).ConvertToFloat(false);
         }
 
-        public static float[] ReadFSINGL(this Stream dlisStream, uint count)
+        public static IEnumerable<float> ReadFSINGL(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 4)) { return null; }
-
-            var response = new float[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadFSINGL(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 4)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadFSINGL(); }
         }
 
         public static FSING1 ReadFSING1(this Stream dlisStream)
@@ -78,13 +73,10 @@ namespace WellLog.Lib.Helpers
             };
         }
 
-        public static FSING1[] ReadFSING1(this Stream dlisStream, uint count)
+        public static IEnumerable<FSING1> ReadFSING1(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 8)) { return null; }
-
-            var response = new FSING1[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadFSING1(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 8)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadFSING1(); }
         }
 
         public static FSING2 ReadFSING2(this Stream dlisStream)
@@ -98,13 +90,10 @@ namespace WellLog.Lib.Helpers
             };
         }
 
-        public static FSING2[] ReadFSING2(this Stream dlisStream, uint count)
+        public static IEnumerable<FSING2> ReadFSING2(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 12)) { return null; }
-
-            var response = new FSING2[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadFSING2(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 12)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadFSING2(); }
         }
 
         public static int IBM_EXP_MASK = 0x7F000000;
@@ -136,13 +125,10 @@ namespace WellLog.Lib.Helpers
             return (sign == 0 ? 1f : -1f) * Convert.ToSingle(mantissa * Math.Pow(16, exponent - 64));
         }
 
-        public static float[] ReadISINGL(this Stream dlisStream, uint count)
+        public static IEnumerable<float> ReadISINGL(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 4)) { return null; }
-
-            var response = new float[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadISINGL(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 4)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadISINGL(); }
         }
 
         public static int VAX_EXP_MASK = 0x7F800000;
@@ -174,13 +160,10 @@ namespace WellLog.Lib.Helpers
             return (sign == 0 ? 1f : -1f) * Convert.ToSingle((0.5d + mantissa) * Math.Pow(2, exponent - 128));
         }
 
-        public static float[] ReadVSINGL(this Stream dlisStream, uint count)
+        public static IEnumerable<float> ReadVSINGL(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 4)) { return null; }
-
-            var response = new float[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadVSINGL(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 4)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadVSINGL(); }
         }
 
         public static double ReadFDOUBL(this Stream dlisStream)
@@ -189,13 +172,10 @@ namespace WellLog.Lib.Helpers
             return dlisStream.ReadBytes(8).ConvertToDouble(false);
         }
 
-        public static double[] ReadFDOUBL(this Stream dlisStream, uint count)
+        public static IEnumerable<double> ReadFDOUBL(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 8)) { return null; }
-
-            var response = new double[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadFDOUBL(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 8)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadFDOUBL(); }
         }
 
         public static FDOUB1 ReadFDOUB1(this Stream dlisStream)
@@ -208,13 +188,10 @@ namespace WellLog.Lib.Helpers
             };
         }
 
-        public static FDOUB1[] ReadFDOUB1(this Stream dlisStream, uint count)
+        public static IEnumerable<FDOUB1> ReadFDOUB1(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 16)) { return null; }
-
-            var response = new FDOUB1[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadFDOUB1(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 16)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadFDOUB1(); }
         }
 
         public static FDOUB2 ReadFDOUB2(this Stream dlisStream)
@@ -228,13 +205,10 @@ namespace WellLog.Lib.Helpers
             };
         }
 
-        public static FDOUB2[] ReadFDOUB2(this Stream dlisStream, uint count)
+        public static IEnumerable<FDOUB2> ReadFDOUB2(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 24)) { return null; }
-
-            var response = new FDOUB2[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadFDOUB2(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 24)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadFDOUB2(); }
         }
 
         public static CSINGL ReadCSINGL(this Stream dlisStream)
@@ -247,13 +221,10 @@ namespace WellLog.Lib.Helpers
             };
         }
 
-        public static CSINGL[] ReadCSINGL(this Stream dlisStream, uint count)
+        public static IEnumerable<CSINGL> ReadCSINGL(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 8)) { return null; }
-
-            var response = new CSINGL[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadCSINGL(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 8)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadCSINGL(); }
         }
 
         public static CDOUBL ReadCDOUBL(this Stream dlisStream)
@@ -266,13 +237,10 @@ namespace WellLog.Lib.Helpers
             };
         }
 
-        public static CDOUBL[] ReadCDOUBL(this Stream dlisStream, uint count)
+        public static IEnumerable<CDOUBL> ReadCDOUBL(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 16)) { return null; }
-
-            var response = new CDOUBL[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadCDOUBL(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 16)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadCDOUBL(); }
         }
 
         public static sbyte ReadSSHORT(this Stream dlisStream)
@@ -281,13 +249,10 @@ namespace WellLog.Lib.Helpers
             return dlisStream.ReadBytes(1).ConvertToSbyte();
         }
 
-        public static sbyte[] ReadSSHORT(this Stream dlisStream, uint count)
+        public static IEnumerable<sbyte> ReadSSHORT(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 1)) { return null; }
-
-            var response = new sbyte[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadSSHORT(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 1)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadSSHORT(); }
         }
 
         public static short ReadSNORM(this Stream dlisStream)
@@ -296,13 +261,10 @@ namespace WellLog.Lib.Helpers
             return dlisStream.ReadBytes(2).ConvertToShort(false);
         }
 
-        public static short[] ReadSNORM(this Stream dlisStream, uint count)
+        public static IEnumerable<short> ReadSNORM(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 2)) { return null; }
-
-            var response = new short[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadSNORM(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 2)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadSNORM(); }
         }
 
         public static int ReadSLONG(this Stream dlisStream)
@@ -311,13 +273,10 @@ namespace WellLog.Lib.Helpers
             return dlisStream.ReadBytes(4).ConvertToInt(false);
         }
 
-        public static int[] ReadSLONG(this Stream dlisStream, uint count)
+        public static IEnumerable<int> ReadSLONG(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 4)) { return null; }
-
-            var response = new int[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadSLONG(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 4)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadSLONG(); }
         }
 
         public static byte ReadUSHORT(this Stream dlisStream)
@@ -326,13 +285,10 @@ namespace WellLog.Lib.Helpers
             return dlisStream.ReadBytes(1).ConvertToByte();
         }
 
-        public static byte[] ReadUSHORT(this Stream dlisStream, uint count)
+        public static IEnumerable<byte> ReadUSHORT(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 1)) { return null; }
-
-            var response = new byte[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadUSHORT(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 1)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadUSHORT(); }
         }
 
         public static ushort ReadUNORM(this Stream dlisStream)
@@ -341,13 +297,10 @@ namespace WellLog.Lib.Helpers
             return dlisStream.ReadBytes(2).ConvertToUshort(false);
         }
 
-        public static ushort[] ReadUNORM(this Stream dlisStream, uint count)
+        public static IEnumerable<ushort> ReadUNORM(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 2)) { return null; }
-
-            var response = new ushort[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadUNORM(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 2)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadUNORM(); }
         }
 
         public static uint ReadULONG(this Stream dlisStream)
@@ -356,13 +309,10 @@ namespace WellLog.Lib.Helpers
             return dlisStream.ReadBytes(4).ConvertToUInt(false);
         }
 
-        public static uint[] ReadULONG(this Stream dlisStream, uint count)
+        public static IEnumerable<uint> ReadULONG(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 4)) { return null; }
-
-            var response = new uint[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadULONG(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 4)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadULONG(); }
         }
 
         public static uint ReadUVARI1(this Stream dlisStream)
@@ -378,7 +328,7 @@ namespace WellLog.Lib.Helpers
             var buffer = dlisStream.ReadBytes(2);
             if (buffer == null) { return 0; }
 
-            buffer[0] = buffer[0].AssignBitUsingMask(0b_1000_0000, false);
+            buffer[0] = buffer[0].ClearBitUsingMask(0b_1000_0000);
             return Convert.ToUInt32(buffer.ConvertToUshort(false));
         }
 
@@ -389,7 +339,7 @@ namespace WellLog.Lib.Helpers
             var buffer = dlisStream.ReadBytes(4);
             if (buffer == null) { return 0; }
 
-            buffer[0] = buffer[0].AssignBitUsingMask(0b_1100_0000, false);
+            buffer[0] = buffer[0].ClearBitUsingMask(0b_1100_0000);
             return buffer.ConvertToUInt(false);
         }
 
@@ -406,13 +356,10 @@ namespace WellLog.Lib.Helpers
             return dlisStream.ReadUVARI4();
         }
 
-        public static uint[] ReadUVARI(this Stream dlisStream, uint count)
+        public static IEnumerable<uint> ReadUVARI(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 1)) { return null; }
-
-            var response = new uint[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadUVARI(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 1)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadUVARI(); }
         }
 
         public static string ReadIDENT(this Stream dlisStream)
@@ -429,13 +376,10 @@ namespace WellLog.Lib.Helpers
             return Encoding.ASCII.GetString(buffer);
         }
 
-        public static string[] ReadIDENT(this Stream dlisStream, uint count)
+        public static IEnumerable<string> ReadIDENT(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 1)) { return null; }
-
-            var response = new string[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadIDENT(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 1)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadIDENT(); }
         }
 
         public static string ReadASCII(this Stream dlisStream)
@@ -452,13 +396,10 @@ namespace WellLog.Lib.Helpers
             return Encoding.ASCII.GetString(buffer);
         }
 
-        public static string[] ReadASCII(this Stream dlisStream, uint count)
+        public static IEnumerable<string> ReadASCII(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 1)) { return null; }
-
-            var response = new string[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadASCII(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 1)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadASCII(); }
         }
 
         public static DateTimeKind ToDateTimeKind(this byte b)
@@ -486,13 +427,10 @@ namespace WellLog.Lib.Helpers
             return new DateTime(year, month, day, hour, minute, second, millisecond, tz.ToDateTimeKind());
         }
 
-        public static DateTime[] ReadDTIME(this Stream dlisStream, uint count)
+        public static IEnumerable<DateTime> ReadDTIME(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 8)) { return null; }
-
-            var response = new DateTime[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadDTIME(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 8)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadDTIME(); }
         }
 
         public static OBNAME ReadOBNAME(this Stream dlisStream)
@@ -506,13 +444,10 @@ namespace WellLog.Lib.Helpers
             };
         }
 
-        public static OBNAME[] ReadOBNAME(this Stream dlisStream, uint count)
+        public static IEnumerable<OBNAME> ReadOBNAME(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 3)) { return null; }
-
-            var response = new OBNAME[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadOBNAME(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 3)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadOBNAME(); }
         }
 
         public static OBJREF ReadOBJREF(this Stream dlisStream)
@@ -525,13 +460,10 @@ namespace WellLog.Lib.Helpers
             };
         }
 
-        public static OBJREF[] ReadOBJREF(this Stream dlisStream, uint count)
+        public static IEnumerable<OBJREF> ReadOBJREF(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 4)) { return null; }
-
-            var response = new OBJREF[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadOBJREF(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 4)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadOBJREF(); }
         }
 
         public static ATTREF ReadATTREF(this Stream dlisStream)
@@ -545,13 +477,10 @@ namespace WellLog.Lib.Helpers
             };
         }
 
-        public static ATTREF[] ReadATTREF(this Stream dlisStream, uint count)
+        public static IEnumerable<ATTREF> ReadATTREF(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 5)) { return null; }
-
-            var response = new ATTREF[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadATTREF(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 5)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadATTREF(); }
         }
 
         public static bool ReadSTATUS(this Stream dlisStream)
@@ -560,13 +489,10 @@ namespace WellLog.Lib.Helpers
             return dlisStream.ReadUSHORT() != 0;
         }
 
-        public static bool[] ReadSTATUS(this Stream dlisStream, uint count)
+        public static IEnumerable<bool> ReadSTATUS(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 1)) { return null; }
-
-            var response = new bool[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadSTATUS(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 1)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadSTATUS(); }
         }
 
         public static string ReadUNITS(this Stream dlisStream)
@@ -583,13 +509,10 @@ namespace WellLog.Lib.Helpers
             return Encoding.ASCII.GetString(buffer);
         }
 
-        public static string[] ReadUNITS(this Stream dlisStream, uint count)
+        public static IEnumerable<string> ReadUNITS(this Stream dlisStream, uint count)
         {
-            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 1)) { return null; }
-
-            var response = new string[count];
-            for (uint i = 0; i < count; i++) { response[i] = dlisStream.ReadUNITS(); }
-            return response;
+            if (dlisStream == null || dlisStream.BytesRemaining() < (count * 1)) { yield break; }
+            for (uint i = 0; i < count; i++) { yield return dlisStream.ReadUNITS(); }
         }
     }
 }
