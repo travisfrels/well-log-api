@@ -15,8 +15,11 @@ namespace WellLog.Lib.Factories.DLIS
 
         public IEnumerable ReadValues(Stream s, uint count)
         {
-            if (s == null || s.BytesRemaining() < (count * 1)) { yield break; }
-            for (uint i = 0; i < count; i++) { yield return ReadSTATUS(s); }
+            if (s == null || s.BytesRemaining() < (count * 1)) { return null; }
+
+            var values = new bool[count];
+            for (uint i = 0; i < count; i++) { values[i] = ReadSTATUS(s); }
+            return values;
         }
     }
 }

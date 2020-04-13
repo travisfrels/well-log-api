@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using WellLog.Lib.Business;
-using WellLog.Lib.Models.DLIS;
 using WellLog.Lib.Helpers;
+using WellLog.Lib.Models.DLIS;
 
 namespace WellLog.Lib.DataAccess
 {
@@ -19,9 +19,10 @@ namespace WellLog.Lib.DataAccess
             _explicitlyFormattedLogicalRecordBusiness = explicitlyFormattedLogicalRecordBusiness;
         }
 
-        public IEnumerable<ExplicitlyFormattedLogicalRecord> Read(string fileName)
+        public DlisLog Read(string fileName)
         {
             if (string.IsNullOrEmpty(fileName)) { throw new ArgumentNullException(nameof(fileName)); }
+
             StorageUnit storageUnit;
             using (var dlisFile = File.Open(fileName, FileMode.Open, FileAccess.Read))
             {
@@ -37,14 +38,17 @@ namespace WellLog.Lib.DataAccess
             var eflrRecords = new List<ExplicitlyFormattedLogicalRecord>();
             using (var eflrStream = new MemoryStream(eflrData))
             {
-                while(!eflrStream.IsAtEndOfStream())
+                while (!eflrStream.IsAtEndOfStream())
                 {
                     var eflr = _explicitlyFormattedLogicalRecordBusiness.ReadExplicitlyFormattedLogicalRecord(eflrStream);
                     if (eflr != null) { eflrRecords.Add(eflr); }
                 }
             }
 
-            return eflrRecords.ToArray();
+            return new DlisLog
+            {
+                EFLRs = eflrRecords.ToArray()
+            };
         }
     }
 }

@@ -31,8 +31,11 @@ namespace WellLog.Lib.Factories.DLIS
 
         public IEnumerable ReadValues(Stream s, uint count)
         {
-            if (s == null || s.BytesRemaining() < count) { yield break; }
-            for (uint i = 0; i < count; i++) { yield return ReadASCII(s); }
+            if (s == null || s.BytesRemaining() < count) { return null; }
+
+            var values = new string[count];
+            for (uint i = 0; i < count; i++) { values[i] = ReadASCII(s); }
+            return values;
         }
     }
 }

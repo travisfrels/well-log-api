@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections;
+using System.IO;
 using WellLog.Lib.Enumerations.DLIS;
 using WellLog.Lib.Factories.DLIS;
 using WellLog.Lib.Helpers;
@@ -28,6 +30,52 @@ namespace WellLog.Lib.Business
             _unitsReader = unitsReader;
         }
 
+        public string ReadAttributeLabel(Stream dlisStream, ComponentDescriptor descriptor, AttributeComponent template = null)
+        {
+            if (dlisStream == null || dlisStream.IsAtEndOfStream()) { return null; }
+
+            if (descriptor.DoesAttributeHaveLabel) { return _identReader.ReadIDENT(dlisStream); }
+            if (template == null) { return DEFAULT_LABEL; }
+            return template.Label;
+        }
+
+        public uint ReadAttributeCount(Stream dlisStream, ComponentDescriptor descriptor, AttributeComponent template = null)
+        {
+            if (dlisStream == null || dlisStream.IsAtEndOfStream()) { return 0; }
+
+            if (descriptor.DoesAttributeHaveCount) { return _uvariReader.ReadUVARI(dlisStream); }
+            if (template == null) { return DEFAULT_COUNT; }
+            return template.Count;
+        }
+
+        public byte ReadAttributeRepresentationCode(Stream dlisStream, ComponentDescriptor descriptor, AttributeComponent template = null)
+        {
+            if (dlisStream == null || dlisStream.IsAtEndOfStream()) { return 0; }
+
+            if (descriptor.DoesAttributeHaveRepresentationCode) { return _ushortReader.ReadUSHORT(dlisStream); }
+            if (template == null) { return DEFAULT_REP_CODE; }
+            return template.RepresentationCode;
+        }
+
+        public string ReadAttributeUnits(Stream dlisStream, ComponentDescriptor descriptor, AttributeComponent template = null)
+        {
+            if (dlisStream == null || dlisStream.IsAtEndOfStream()) { return null; }
+
+            if (descriptor.DoesAttributeHaveUnits) { return _unitsReader.ReadUNITS(dlisStream); }
+            if (template == null) { return DEFAULT_UNITS; }
+            return template.Units;
+        }
+
+        public IEnumerable ReadAttributeValue(Stream dlisStream, ComponentDescriptor descriptor, byte repCode, uint count)
+        {
+            if (dlisStream == null || dlisStream.IsAtEndOfStream()) { return null; }
+            if (!descriptor.DoesAttributeHaveValue) { return null; }
+
+            var valueReader = ValueReaderFactory.GetReader((RepresentationCode)repCode);
+            if (valueReader == null) { throw new Exception($"no value reader found for representation code {repCode}"); }
+            return valueReader.ReadValues(dlisStream, count);
+        }
+
         public ComponentBase ReadComponent(Stream dlisStream, AttributeComponent template = null)
         {
             if (dlisStream == null || dlisStream.IsAtEndOfStream()) { return null; }
@@ -51,41 +99,21 @@ namespace WellLog.Lib.Business
 
             if (descriptor.IsAttribute || descriptor.IsInvariantAttribute)
             {
-                byte representationCode = DEFAULT_REP_CODE;
-                if (descriptor.DoesAttributeHaveRepresentationCode)
-                {
-                    representationCode = _ushortReader.ReadUSHORT(dlisStream);
-                }
-                else if (template != null && template.Descriptor.DoesAttributeHaveRepresentationCode)
-                {
-                    representationCode = template.RepresentationCode;
-                }
-
-                uint count = 0;
-                if (descriptor.DoesAttributeHaveCount)
-                {
-                    count = _uvariReader.ReadUVARI(dlisStream);
-                }
-                else if (template != null && template.Descriptor.DoesAttributeHaveCount)
-                {
-                    count = template.Count;
-                }
-
-                IValueReader valueReader = null;
-                if (descriptor.DoesAttributeHaveValue)
-                {
-                    valueReader = ValueReaderFactory.GetReader((RepresentationCode)representationCode);
-                }
+                var label = ReadAttributeLabel(dlisStream, descriptor, template);
+                var count = ReadAttributeCount(dlisStream, descriptor, template);
+                var representationCode = ReadAttributeRepresentationCode(dlisStream, descriptor, template);
+                var units = ReadAttributeUnits(dlisStream, descriptor, template);
+                var value = ReadAttributeValue(dlisStream, descriptor, representationCode, count);
 
                 return new AttributeComponent
                 {
                     Descriptor = descriptor,
                     StartPosition = startPosition,
-                    Label = descriptor.DoesAttributeHaveLabel ? _identReader.ReadIDENT(dlisStream) : (template == null ? DEFAULT_LABEL : template.Label),
+                    Label = label,
                     Count = count,
                     RepresentationCode = representationCode,
-                    Units = descriptor.DoesAttributeHaveUnits ? _unitsReader.ReadUNITS(dlisStream) : (template == null ? DEFAULT_UNITS : template.Units),
-                    Value = valueReader?.ReadValues(dlisStream, count)
+                    Units = units,
+                    Value = value
                 };
             }
 

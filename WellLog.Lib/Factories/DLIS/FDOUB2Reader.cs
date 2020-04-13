@@ -27,8 +27,11 @@ namespace WellLog.Lib.Factories.DLIS
 
         public IEnumerable ReadValues(Stream s, uint count)
         {
-            if (s == null || s.BytesRemaining() < (count * 24)) { yield break; }
-            for (uint i = 0; i < count; i++) { yield return ReadFDOUB2(s); }
+            if (s == null || s.BytesRemaining() < (count * 24)) { return null; }
+
+            var values = new FDOUB2[count];
+            for (uint i = 0; i < count; i++) { values[i] = ReadFDOUB2(s); }
+            return values;
         }
     }
 }

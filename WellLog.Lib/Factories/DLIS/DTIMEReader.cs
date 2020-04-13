@@ -34,8 +34,11 @@ namespace WellLog.Lib.Factories.DLIS
 
         public IEnumerable ReadValues(Stream s, uint count)
         {
-            if (s == null || s.BytesRemaining() < (count * 8)) { yield break; }
-            for (uint i = 0; i < count; i++) { yield return ReadDTIME(s); }
+            if (s == null || s.BytesRemaining() < (count * 8)) { return null; }
+
+            var values = new DateTime[count];
+            for (uint i = 0; i < count; i++) { values[i] = ReadDTIME(s); }
+            return values;
         }
     }
 }

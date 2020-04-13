@@ -31,8 +31,11 @@ namespace WellLog.Lib.Factories.DLIS
 
         public IEnumerable ReadValues(Stream s, uint count)
         {
-            if (s == null || s.BytesRemaining() < (count * 3)) { yield break; }
-            for (uint i = 0; i < count; i++) { yield return ReadOBNAME(s); }
+            if (s == null || s.BytesRemaining() < (count * 3)) { return null; }
+
+            var values = new OBNAME[count];
+            for (uint i = 0; i < count; i++) { values[i] = ReadOBNAME(s); }
+            return values;
         }
     }
 }

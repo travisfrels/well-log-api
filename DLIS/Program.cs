@@ -24,8 +24,8 @@ namespace DLIS
                 var dlisLogFileDataAccess = serviceProvider.GetService<IDlisLogFileDataAccess>();
                 var dlisLog = dlisLogFileDataAccess.Read("sample2.DLIS");
 
-                //var dlisLogPrinter = serviceProvider.GetService<IDlisLogPrinter>();
-                //dlisLogPrinter.PrintLasLog(dlisLog);
+                var dlisLogPrinter = serviceProvider.GetService<IDlisLogPrinter>();
+                dlisLogPrinter.PrintLasLog(dlisLog);
             }
             catch (Exception ex)
             {
