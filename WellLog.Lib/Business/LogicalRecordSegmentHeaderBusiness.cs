@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using WellLog.Lib.Enumerations.DLIS;
 using WellLog.Lib.Helpers;
 using WellLog.Lib.Models.DLIS;
 

@@ -9,6 +9,7 @@ namespace WellLog.Lib.Helpers
             if (header == null) { return false; }
             return header.TrailingLength || header.Checksum || header.Padding;
         }
+
         public static int TrailerSize(this LogicalRecordSegmentHeader header, LogicalRecordSegmentTrailer trailer)
         {
             if (header == null) { return 0; }

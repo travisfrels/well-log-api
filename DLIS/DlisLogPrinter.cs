@@ -26,6 +26,7 @@ namespace DLIS
             _textWriter.WriteLine($"StorageSetIdentifier: {storageUnit.Label.StorageSetIdentifier}");
             _textWriter.WriteLine();
             _textWriter.WriteLine($"Visible Records: {storageUnit.VisibleRecords.Count()}");
+            _textWriter.WriteLine($"Logical Record Segments: {storageUnit.VisibleRecords.SelectMany(x => x.Segments).Count()}");
         }
     }
 }
