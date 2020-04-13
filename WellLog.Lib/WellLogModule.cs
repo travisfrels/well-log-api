@@ -62,11 +62,16 @@ namespace WellLog.Lib
             serviceCollection.AddScoped<IATTREFReader, ATTREFReader>();
             serviceCollection.AddScoped<ISTATUSReader, STATUSReader>();
             serviceCollection.AddScoped<IUNITSReader, UNITSReader>();
+
+            serviceCollection.AddScoped<ISetComponentReader, SetComponentReader>();
+            serviceCollection.AddScoped<IObjectComponentReader, ObjectComponentReader>();
+            serviceCollection.AddScoped<IAttributeComponentReader, AttributeComponentReader>();
         }
 
         public static void InitFactories(IServiceProvider serviceProvider)
         {
             ValueReaderFactory.RegisterReaders(serviceProvider);
+            ComponentReaderFactory.RegisterReaders(serviceProvider);
         }
     }
 }

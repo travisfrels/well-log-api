@@ -25,6 +25,8 @@ namespace WellLog.Lib.Models.DLIS
 
         private readonly byte _descriptor;
 
+        public byte Role => _descriptor.ClearBitUsingMask(0b_0001_1111);
+
         public bool IsAbsentAttribute => _descriptor.HasDlisComponentRole(ABSENT_ATTRIBUTE_ROLE);
         public bool IsAttribute => _descriptor.HasDlisComponentRole(ATTRIBUTE_ROLE);
         public bool IsInvariantAttribute => _descriptor.HasDlisComponentRole(INVARIANT_ATTRIBUTE_ROLE);
