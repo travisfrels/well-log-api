@@ -4,7 +4,7 @@ using WellLog.Lib.Helpers;
 
 namespace WellLog.Lib.Factories.DLIS
 {
-    public class FDOUBLReader : IValueReader
+    public class FDOUBLReader : IValueReader, IFDOUBLReader
     {
         public double ReadFDOUBL(Stream s)
         {

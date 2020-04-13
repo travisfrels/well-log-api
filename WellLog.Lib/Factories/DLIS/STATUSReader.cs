@@ -5,7 +5,7 @@ using WellLog.Lib.Helpers;
 
 namespace WellLog.Lib.Factories.DLIS
 {
-    public class STATUSReader : IValueReader
+    public class STATUSReader : IValueReader, ISTATUSReader
     {
         public bool ReadSTATUS(Stream s)
         {

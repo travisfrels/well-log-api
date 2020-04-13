@@ -5,7 +5,7 @@ using WellLog.Lib.Helpers;
 
 namespace WellLog.Lib.Factories.DLIS
 {
-    public class ISINGLReader : IValueReader
+    public class ISINGLReader : IValueReader, IISINGLReader
     {
         public static int IBM_EXP_MASK = 0x7F000000;
         public static int IBM_EXP_SIZE = 7;

@@ -6,11 +6,11 @@ using WellLog.Lib.Helpers;
 
 namespace WellLog.Lib.Factories.DLIS
 {
-    public class ASCIIReader : IValueReader
+    public class ASCIIReader : IValueReader, IASCIIReader
     {
-        private readonly UVARIReader _uvariReader;
+        private readonly IUVARIReader _uvariReader;
 
-        public ASCIIReader(UVARIReader uvariReader)
+        public ASCIIReader(IUVARIReader uvariReader)
         {
             _uvariReader = uvariReader;
         }
@@ -32,7 +32,7 @@ namespace WellLog.Lib.Factories.DLIS
         public IEnumerable ReadValues(Stream s, uint count)
         {
             if (s == null || s.BytesRemaining() < count) { yield break; }
-            for (uint i = 0; i < count; i++) { yield return s.ReadASCII(); }
+            for (uint i = 0; i < count; i++) { yield return ReadASCII(s); }
         }
     }
 }

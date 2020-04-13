@@ -5,12 +5,12 @@ using WellLog.Lib.Models.DLIS;
 
 namespace WellLog.Lib.Factories.DLIS
 {
-    public class ATTREFReader : IValueReader
+    public class ATTREFReader : IValueReader, IATTREFReader
     {
-        private readonly IDENTReader _identReader;
-        private readonly OBNAMEReader _obnameReader;
+        private readonly IIDENTReader _identReader;
+        private readonly IOBNAMEReader _obnameReader;
 
-        public ATTREFReader(IDENTReader identReader, OBNAMEReader obnameReader)
+        public ATTREFReader(IIDENTReader identReader, IOBNAMEReader obnameReader)
         {
             _identReader = identReader;
             _obnameReader = obnameReader;

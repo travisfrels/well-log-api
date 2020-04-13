@@ -5,8 +5,14 @@ using WellLog.Lib.Helpers;
 
 namespace WellLog.Lib.Factories.DLIS
 {
-    public class DTIMEReader : IValueReader
+    public class DTIMEReader : IValueReader, IDTIMEReader
     {
+        public DateTimeKind ToDateTimeKind(byte b)
+        {
+            if (b == 1 || b == 2) { return DateTimeKind.Local; }
+            return DateTimeKind.Utc;
+        }
+
         public DateTime ReadDTIME(Stream s)
         {
             if (s == null || s.BytesRemaining() < 8) { return DateTime.MinValue; }
@@ -23,7 +29,7 @@ namespace WellLog.Lib.Factories.DLIS
             var second = buffer[5];
             var millisecond = buffer[6..8].ConvertToUshort(false);
 
-            return new DateTime(year, month, day, hour, minute, second, millisecond, tz.ToDateTimeKind());
+            return new DateTime(year, month, day, hour, minute, second, millisecond, ToDateTimeKind(tz));
         }
 
         public IEnumerable ReadValues(Stream s, uint count)

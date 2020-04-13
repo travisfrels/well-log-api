@@ -5,7 +5,7 @@ using WellLog.Lib.Helpers;
 
 namespace WellLog.Lib.Factories.DLIS
 {
-    public class IDENTReader : IValueReader
+    public class IDENTReader : IValueReader, IIDENTReader
     {
         public string ReadIDENT(Stream s)
         {

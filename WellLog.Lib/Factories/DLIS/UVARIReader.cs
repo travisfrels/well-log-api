@@ -5,7 +5,7 @@ using WellLog.Lib.Helpers;
 
 namespace WellLog.Lib.Factories.DLIS
 {
-    public class UVARIReader : IValueReader
+    public class UVARIReader : IValueReader, IUVARIReader
     {
         public uint ReadUVARI1(Stream s)
         {
@@ -43,9 +43,9 @@ namespace WellLog.Lib.Factories.DLIS
             if (buffer == null) { return 0; }
 
             s.Seek(-1, SeekOrigin.Current);
-            if (!buffer[0].GetBitUsingMask(0b_1000_0000)) { return s.ReadUVARI1(); }
-            if (!buffer[0].GetBitUsingMask(0b_0100_0000)) { return s.ReadUVARI2(); }
-            return s.ReadUVARI4();
+            if (!buffer[0].GetBitUsingMask(0b_1000_0000)) { return ReadUVARI1(s); }
+            if (!buffer[0].GetBitUsingMask(0b_0100_0000)) { return ReadUVARI2(s); }
+            return ReadUVARI4(s);
         }
 
         public IEnumerable ReadValues(Stream s, uint count)

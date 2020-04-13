@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using WellLog.Lib.Business;
 using WellLog.Lib.DataAccess;
 using WellLog.Lib.Factories.DLIS;
@@ -34,8 +35,38 @@ namespace WellLog.Lib
             serviceCollection.AddScoped<ILasLogFileDataAccess, LasLogFileDataAccess>();
             serviceCollection.AddScoped<IDlisLogFileDataAccess, DlisLogFileDataAccess>();
 
-            /* Factories */
-            ValueReaderFactory.RegisterReaders();
+            /* Readers */
+            serviceCollection.AddScoped<IFSHORTReader, FSHORTReader>();
+            serviceCollection.AddScoped<IFSINGLReader, FSINGLReader>();
+            serviceCollection.AddScoped<IFSING1Reader, FSING1Reader>();
+            serviceCollection.AddScoped<IFSING2Reader, FSING2Reader>();
+            serviceCollection.AddScoped<IISINGLReader, ISINGLReader>();
+            serviceCollection.AddScoped<IVSINGLReader, VSINGLReader>();
+            serviceCollection.AddScoped<IFDOUBLReader, FDOUBLReader>();
+            serviceCollection.AddScoped<IFDOUB1Reader, FDOUB1Reader>();
+            serviceCollection.AddScoped<IFDOUB2Reader, FDOUB2Reader>();
+            serviceCollection.AddScoped<ICSINGLReader, CSINGLReader>();
+            serviceCollection.AddScoped<ICDOUBLReader, CDOUBLReader>();
+            serviceCollection.AddScoped<ISSHORTReader, SSHORTReader>();
+            serviceCollection.AddScoped<ISNORMReader, SNORMReader>();
+            serviceCollection.AddScoped<ISLONGReader, SLONGReader>();
+            serviceCollection.AddScoped<IUSHORTReader, USHORTReader>();
+            serviceCollection.AddScoped<IUNORMReader, UNORMReader>();
+            serviceCollection.AddScoped<IULONGReader, ULONGReader>();
+            serviceCollection.AddScoped<IUVARIReader, UVARIReader>();
+            serviceCollection.AddScoped<IIDENTReader, IDENTReader>();
+            serviceCollection.AddScoped<IASCIIReader, ASCIIReader>();
+            serviceCollection.AddScoped<IDTIMEReader, DTIMEReader>();
+            serviceCollection.AddScoped<IOBNAMEReader, OBNAMEReader>();
+            serviceCollection.AddScoped<IOBJREFReader, OBJREFReader>();
+            serviceCollection.AddScoped<IATTREFReader, ATTREFReader>();
+            serviceCollection.AddScoped<ISTATUSReader, STATUSReader>();
+            serviceCollection.AddScoped<IUNITSReader, UNITSReader>();
+        }
+
+        public static void InitFactories(IServiceProvider serviceProvider)
+        {
+            ValueReaderFactory.RegisterReaders(serviceProvider);
         }
     }
 }

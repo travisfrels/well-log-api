@@ -13,24 +13,39 @@ namespace WellLog.Lib.Business
         public const byte DEFAULT_REP_CODE = 19;
         public const string DEFAULT_UNITS = "";
 
+        private readonly IUSHORTReader _ushortReader;
+        private readonly IIDENTReader _identReader;
+        private readonly IOBNAMEReader _obnameReader;
+        private readonly IUVARIReader _uvariReader;
+        private readonly IUNITSReader _unitsReader;
+
+        public ComponentBusiness(IUSHORTReader ushortReader, IIDENTReader identReader, IOBNAMEReader obnameReader, IUVARIReader uvariReader, IUNITSReader unitsReader)
+        {
+            _ushortReader = ushortReader;
+            _identReader = identReader;
+            _obnameReader = obnameReader;
+            _uvariReader = uvariReader;
+            _unitsReader = unitsReader;
+        }
+
         public ComponentBase ReadComponent(Stream dlisStream, AttributeComponent template = null)
         {
             if (dlisStream == null || dlisStream.IsAtEndOfStream()) { return null; }
 
             var startPosition = dlisStream.Position;
-            var descriptor = new ComponentDescriptor(dlisStream.ReadUSHORT());
+            var descriptor = new ComponentDescriptor(_ushortReader.ReadUSHORT(dlisStream));
             if (descriptor.IsSet || descriptor.IsRedundantSet || descriptor.IsReplacementSet)
             {
                 var setComponent = new SetComponent { Descriptor = descriptor, StartPosition = startPosition };
-                if (descriptor.DoesSetHaveType) { setComponent.Type = dlisStream.ReadIDENT(); }
-                if (descriptor.DoesSetHaveName) { setComponent.Name = dlisStream.ReadIDENT(); }
+                if (descriptor.DoesSetHaveType) { setComponent.Type = _identReader.ReadIDENT(dlisStream); }
+                if (descriptor.DoesSetHaveName) { setComponent.Name = _identReader.ReadIDENT(dlisStream); }
                 return setComponent;
             }
 
             if (descriptor.IsObject)
             {
                 var objComponent = new ObjectComponent { Descriptor = descriptor, StartPosition = startPosition };
-                if (descriptor.DoesObjectHaveName) { objComponent.Name = dlisStream.ReadOBNAME(); }
+                if (descriptor.DoesObjectHaveName) { objComponent.Name = _obnameReader.ReadOBNAME(dlisStream); }
                 return objComponent;
             }
 
@@ -39,7 +54,7 @@ namespace WellLog.Lib.Business
                 byte representationCode = DEFAULT_REP_CODE;
                 if (descriptor.DoesAttributeHaveRepresentationCode)
                 {
-                    representationCode = dlisStream.ReadUSHORT();
+                    representationCode = _ushortReader.ReadUSHORT(dlisStream);
                 }
                 else if (template != null && template.Descriptor.DoesAttributeHaveRepresentationCode)
                 {
@@ -49,7 +64,7 @@ namespace WellLog.Lib.Business
                 uint count = 0;
                 if (descriptor.DoesAttributeHaveCount)
                 {
-                    count = dlisStream.ReadUVARI();
+                    count = _uvariReader.ReadUVARI(dlisStream);
                 }
                 else if (template != null && template.Descriptor.DoesAttributeHaveCount)
                 {
@@ -66,10 +81,10 @@ namespace WellLog.Lib.Business
                 {
                     Descriptor = descriptor,
                     StartPosition = startPosition,
-                    Label = descriptor.DoesAttributeHaveLabel ? dlisStream.ReadIDENT() : (template == null ? DEFAULT_LABEL : template.Label),
+                    Label = descriptor.DoesAttributeHaveLabel ? _identReader.ReadIDENT(dlisStream) : (template == null ? DEFAULT_LABEL : template.Label),
                     Count = count,
                     RepresentationCode = representationCode,
-                    Units = descriptor.DoesAttributeHaveUnits ? dlisStream.ReadUNITS() : (template == null ? DEFAULT_UNITS : template.Units),
+                    Units = descriptor.DoesAttributeHaveUnits ? _unitsReader.ReadUNITS(dlisStream) : (template == null ? DEFAULT_UNITS : template.Units),
                     Value = valueReader?.ReadValues(dlisStream, count)
                 };
             }

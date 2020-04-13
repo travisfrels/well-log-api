@@ -5,11 +5,11 @@ using WellLog.Lib.Models.DLIS;
 
 namespace WellLog.Lib.Factories.DLIS
 {
-    public class CSINGLReader : IValueReader
+    public class CSINGLReader : IValueReader, ICSINGLReader
     {
-        private readonly FSINGLReader _fsinglReader;
+        private readonly IFSINGLReader _fsinglReader;
 
-        public CSINGLReader(FSINGLReader fsinglReader)
+        public CSINGLReader(IFSINGLReader fsinglReader)
         {
             _fsinglReader = fsinglReader;
         }

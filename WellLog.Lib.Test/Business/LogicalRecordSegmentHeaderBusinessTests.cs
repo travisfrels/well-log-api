@@ -1,18 +1,23 @@
 ﻿using NUnit.Framework;
 using System.IO;
 using WellLog.Lib.Business;
+using WellLog.Lib.Factories.DLIS;
 
 namespace WellLog.Lib.Test.Business
 {
     [TestFixture]
     public class LogicalRecordSegmentHeaderBusinessTests
     {
+        private UNORMReader _unormReader;
+        private USHORTReader _ushortReader;
         private LogicalRecordSegmentHeaderBusiness _logicalRecordSegmentHeaderBusiness;
 
         [SetUp]
         public void PerTestSetup()
         {
-            _logicalRecordSegmentHeaderBusiness = new LogicalRecordSegmentHeaderBusiness();
+            _unormReader = new UNORMReader();
+            _ushortReader = new USHORTReader();
+            _logicalRecordSegmentHeaderBusiness = new LogicalRecordSegmentHeaderBusiness(_unormReader, _ushortReader);
         }
 
         [Test]

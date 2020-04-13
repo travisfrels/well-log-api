@@ -5,7 +5,7 @@ using WellLog.Lib.Helpers;
 
 namespace WellLog.Lib.Factories.DLIS
 {
-    public class VSINGLReader : IValueReader
+    public class VSINGLReader : IValueReader, IVSINGLReader
     {
         public static int VAX_EXP_MASK = 0x7F800000;
         public static int VAX_EXP_SIZE = 8;

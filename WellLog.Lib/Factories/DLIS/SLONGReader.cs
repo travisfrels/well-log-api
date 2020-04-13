@@ -4,7 +4,7 @@ using WellLog.Lib.Helpers;
 
 namespace WellLog.Lib.Factories.DLIS
 {
-    public class SLONGReader : IValueReader
+    public class SLONGReader : IValueReader, ISLONGReader
     {
         public int ReadSLONG(Stream s)
         {

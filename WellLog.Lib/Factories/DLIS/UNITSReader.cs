@@ -5,7 +5,7 @@ using WellLog.Lib.Helpers;
 
 namespace WellLog.Lib.Factories.DLIS
 {
-    public class UNITSReader : IValueReader
+    public class UNITSReader : IValueReader, IUNITSReader
     {
         public string ReadUNITS(Stream s)
         {

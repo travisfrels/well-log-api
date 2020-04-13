@@ -5,13 +5,13 @@ using WellLog.Lib.Models.DLIS;
 
 namespace WellLog.Lib.Factories.DLIS
 {
-    public class OBNAMEReader : IValueReader
+    public class OBNAMEReader : IValueReader, IOBNAMEReader
     {
-        private readonly UVARIReader _uvariReader;
-        private readonly USHORTReader _ushortReader;
-        private readonly IDENTReader _identReader;
+        private readonly IUVARIReader _uvariReader;
+        private readonly IUSHORTReader _ushortReader;
+        private readonly IIDENTReader _identReader;
 
-        public OBNAMEReader(UVARIReader uvariReader, USHORTReader ushortReader, IDENTReader identReader)
+        public OBNAMEReader(IUVARIReader uvariReader, IUSHORTReader ushortReader, IIDENTReader identReader)
         {
             _uvariReader = uvariReader;
             _ushortReader = ushortReader;

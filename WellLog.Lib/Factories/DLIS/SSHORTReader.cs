@@ -4,7 +4,7 @@ using WellLog.Lib.Helpers;
 
 namespace WellLog.Lib.Factories.DLIS
 {
-    public class SSHORTReader : IValueReader
+    public class SSHORTReader : IValueReader, ISSHORTReader
     {
         public sbyte ReadSSHORT(Stream s)
         {

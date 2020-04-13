@@ -5,7 +5,7 @@ using WellLog.Lib.Helpers;
 
 namespace WellLog.Lib.Factories.DLIS
 {
-    public class FSHORTReader : IValueReader
+    public class FSHORTReader : IValueReader, IFSHORTReader
     {
         public static ushort FSHORT_EXP_MASK = 0x000F;
         public static int FSHORT_EXP_SIZE = 4;

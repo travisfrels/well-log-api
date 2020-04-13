@@ -4,7 +4,7 @@ using WellLog.Lib.Helpers;
 
 namespace WellLog.Lib.Factories.DLIS
 {
-    public class FSINGLReader : IValueReader
+    public class FSINGLReader : IValueReader, IFSINGLReader
     {
         public float ReadFSINGL(Stream s)
         {

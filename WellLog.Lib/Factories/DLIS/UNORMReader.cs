@@ -4,7 +4,7 @@ using WellLog.Lib.Helpers;
 
 namespace WellLog.Lib.Factories.DLIS
 {
-    public class UNORMReader : IValueReader
+    public class UNORMReader : IValueReader, IUNORMReader
     {
         public ushort ReadUNORM(Stream s)
         {
