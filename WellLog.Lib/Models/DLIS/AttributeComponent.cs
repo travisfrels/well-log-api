@@ -9,5 +9,6 @@ namespace WellLog.Lib.Models.DLIS
         public byte RepresentationCode { get; set; }
         public string Units { get; set; }
         public IEnumerable Value { get; set; }
+        public AttributeComponent Template { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 {
     public class FileHeaderLogicalRecord
     {
-        public uint SequenceNumber { get; set; }
+        public string SequenceNumber { get; set; }
         public string ID { get; set; }
     }
 }

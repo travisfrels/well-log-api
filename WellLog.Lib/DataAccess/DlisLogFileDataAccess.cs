@@ -12,11 +12,13 @@ namespace WellLog.Lib.DataAccess
     {
         private readonly IStorageUnitBusiness _storageUnitBusiness;
         private readonly IExplicitlyFormattedLogicalRecordBusiness _explicitlyFormattedLogicalRecordBusiness;
+        private readonly IFileHeaderLogicalRecordBusiness _fileHeaderLogicalRecordBusiness;
 
-        public DlisLogFileDataAccess(IStorageUnitBusiness storageUnitBusiness, IExplicitlyFormattedLogicalRecordBusiness explicitlyFormattedLogicalRecordBusiness)
+        public DlisLogFileDataAccess(IStorageUnitBusiness storageUnitBusiness, IExplicitlyFormattedLogicalRecordBusiness explicitlyFormattedLogicalRecordBusiness, IFileHeaderLogicalRecordBusiness fileHeaderLogicalRecordBusiness)
         {
             _storageUnitBusiness = storageUnitBusiness;
             _explicitlyFormattedLogicalRecordBusiness = explicitlyFormattedLogicalRecordBusiness;
+            _fileHeaderLogicalRecordBusiness = fileHeaderLogicalRecordBusiness;
         }
 
         public DlisLog Read(string fileName)
@@ -47,7 +49,9 @@ namespace WellLog.Lib.DataAccess
 
             return new DlisLog
             {
-                EFLRs = eflrRecords.ToArray()
+                Label = storageUnit.Label,
+                EFLRs = eflrRecords.ToArray(),
+                FileHeader = _fileHeaderLogicalRecordBusiness.ConvertEFLRtoFileHeader(_fileHeaderLogicalRecordBusiness.GetFileHeaderEFLR(eflrRecords))
             };
         }
     }

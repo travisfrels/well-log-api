@@ -88,7 +88,8 @@ namespace WellLog.Lib.Factories.DLIS
                 Count = count,
                 RepresentationCode = representationCode,
                 Units = units,
-                Value = value
+                Value = value,
+                Template = template
             };
         }
     }

@@ -27,6 +27,7 @@ namespace WellLog.Lib
             serviceCollection.AddScoped<ILogicalRecordSegmentBusiness, LogicalRecordSegmentBusiness>();
             serviceCollection.AddScoped<IComponentBusiness, ComponentBusiness>();
             serviceCollection.AddScoped<IExplicitlyFormattedLogicalRecordBusiness, ExplicitlyFormattedLogicalRecordBusiness>();
+            serviceCollection.AddScoped<IFileHeaderLogicalRecordBusiness, FileHeaderLogicalRecordBusiness>();
 
             /* Validators */
             serviceCollection.AddScoped<ILasLogValidator, LasLogValidator>();
