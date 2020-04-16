@@ -82,5 +82,19 @@ namespace WellLog.Lib.Business
                 yield return obj.Attributes.FirstOrDefault(x => x.Template == template);
             }
         }
+
+        public object GetFirstValueByLabel(ExplicitlyFormattedLogicalRecord eflr, string label)
+        {
+            var attribute = GetAttributesByLabel(eflr, label).FirstOrDefault();
+            if (attribute == null || attribute.Value == null) { return null; }
+            return attribute.Value.First();
+        }
+
+        public string GetFirstStringByLabel(ExplicitlyFormattedLogicalRecord eflr, string label)
+        {
+            var value = GetFirstValueByLabel(eflr, label);
+            if (value == null) { return null; }
+            return value.ToString().Trim();
+        }
     }
 }

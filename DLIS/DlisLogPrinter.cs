@@ -37,6 +37,31 @@ namespace DLIS
             _textWriter.WriteLine($"\tSequence Number : {dlisLog.FileHeader.SequenceNumber}");
             _textWriter.WriteLine($"\tID              : {dlisLog.FileHeader.ID}");
             _textWriter.WriteLine();
+
+            foreach(var origin in dlisLog.Origins)
+            {
+                _textWriter.WriteLine("Origin");
+                _textWriter.WriteLine($"\tFile ID            : {origin.FileID}");
+                _textWriter.WriteLine($"\tFile Set Name      : {origin.FileSetName}");
+                _textWriter.WriteLine($"\tFile Set Number    : {origin.FileSetNumber}");
+                _textWriter.WriteLine($"\tFile Number        : {origin.FileNumber}");
+                _textWriter.WriteLine($"\tFile Type          : {origin.FileType}");
+                _textWriter.WriteLine($"\tProduct            : {origin.Product}");
+                _textWriter.WriteLine($"\tVersion            : {origin.Version}");
+                _textWriter.WriteLine($"\tPrograms           : {origin.Programs}");
+                _textWriter.WriteLine($"\tCreation Time      : {origin.CreationTime}");
+                _textWriter.WriteLine($"\tOrder Number       : {origin.OrderNumber}");
+                _textWriter.WriteLine($"\tDescent Number     : {origin.DescentNumber}");
+                _textWriter.WriteLine($"\tRun Number         : {origin.RunNumber}");
+                _textWriter.WriteLine($"\tWell Name          : {origin.WellName}");
+                _textWriter.WriteLine($"\tField Name         : {origin.FieldName}");
+                _textWriter.WriteLine($"\tProducer Code      : {origin.ProducerCode}");
+                _textWriter.WriteLine($"\tProducer Name      : {origin.ProducerName}");
+                _textWriter.WriteLine($"\tCompany            : {origin.Company}");
+                _textWriter.WriteLine($"\tName Space Name    : {origin.NameSpaceName}");
+                _textWriter.WriteLine($"\tName Space Version : {origin.NameSpaceVersion}");
+                _textWriter.WriteLine();
+            }
         }
     }
 }

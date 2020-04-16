@@ -8,5 +8,7 @@ namespace WellLog.Lib.Business
     {
         ExplicitlyFormattedLogicalRecord ReadExplicitlyFormattedLogicalRecord(Stream dlisStream);
         IEnumerable<AttributeComponent> GetAttributesByLabel(ExplicitlyFormattedLogicalRecord eflr, string label);
+        object GetFirstValueByLabel(ExplicitlyFormattedLogicalRecord eflr, string label);
+        string GetFirstStringByLabel(ExplicitlyFormattedLogicalRecord eflr, string label);
     }
 }

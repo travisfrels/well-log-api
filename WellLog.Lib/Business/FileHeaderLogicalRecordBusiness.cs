@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WellLog.Lib.Helpers;
 using WellLog.Lib.Models.DLIS;
 
 namespace WellLog.Lib.Business
@@ -39,8 +38,8 @@ namespace WellLog.Lib.Business
 
             return new FileHeaderLogicalRecord
             {
-                SequenceNumber = ((string)_eflrBusiness.GetAttributesByLabel(eflr, SEQUENCE_NUMBER_LABEL).FirstOrDefault()?.Value.First()).Trim(),
-                ID = ((string)_eflrBusiness.GetAttributesByLabel(eflr, ID_LABEL).FirstOrDefault()?.Value.First()).Trim(),
+                SequenceNumber = _eflrBusiness.GetFirstStringByLabel(eflr, SEQUENCE_NUMBER_LABEL),
+                ID = _eflrBusiness.GetFirstStringByLabel(eflr, ID_LABEL)
             };
         }
     }

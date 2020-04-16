@@ -11,14 +11,16 @@ namespace WellLog.Lib.DataAccess
     public class DlisLogFileDataAccess : IDlisLogFileDataAccess
     {
         private readonly IStorageUnitBusiness _storageUnitBusiness;
-        private readonly IExplicitlyFormattedLogicalRecordBusiness _explicitlyFormattedLogicalRecordBusiness;
-        private readonly IFileHeaderLogicalRecordBusiness _fileHeaderLogicalRecordBusiness;
+        private readonly IExplicitlyFormattedLogicalRecordBusiness _eflrBusiness;
+        private readonly IFileHeaderLogicalRecordBusiness _fhlrBusiness;
+        private readonly IOriginLogicalRecordBusiness _olrBusiness;
 
-        public DlisLogFileDataAccess(IStorageUnitBusiness storageUnitBusiness, IExplicitlyFormattedLogicalRecordBusiness explicitlyFormattedLogicalRecordBusiness, IFileHeaderLogicalRecordBusiness fileHeaderLogicalRecordBusiness)
+        public DlisLogFileDataAccess(IStorageUnitBusiness storageUnitBusiness, IExplicitlyFormattedLogicalRecordBusiness eflrBusiness, IFileHeaderLogicalRecordBusiness fhlrBusiness, IOriginLogicalRecordBusiness olrBusiness)
         {
             _storageUnitBusiness = storageUnitBusiness;
-            _explicitlyFormattedLogicalRecordBusiness = explicitlyFormattedLogicalRecordBusiness;
-            _fileHeaderLogicalRecordBusiness = fileHeaderLogicalRecordBusiness;
+            _eflrBusiness = eflrBusiness;
+            _fhlrBusiness = fhlrBusiness;
+            _olrBusiness = olrBusiness;
         }
 
         public DlisLog Read(string fileName)
@@ -42,7 +44,7 @@ namespace WellLog.Lib.DataAccess
             {
                 while (!eflrStream.IsAtEndOfStream())
                 {
-                    var eflr = _explicitlyFormattedLogicalRecordBusiness.ReadExplicitlyFormattedLogicalRecord(eflrStream);
+                    var eflr = _eflrBusiness.ReadExplicitlyFormattedLogicalRecord(eflrStream);
                     if (eflr != null) { eflrRecords.Add(eflr); }
                 }
             }
@@ -51,7 +53,8 @@ namespace WellLog.Lib.DataAccess
             {
                 Label = storageUnit.Label,
                 EFLRs = eflrRecords.ToArray(),
-                FileHeader = _fileHeaderLogicalRecordBusiness.ConvertEFLRtoFileHeader(_fileHeaderLogicalRecordBusiness.GetFileHeaderEFLR(eflrRecords))
+                FileHeader = _fhlrBusiness.ConvertEFLRtoFileHeader(_fhlrBusiness.GetFileHeaderEFLR(eflrRecords)),
+                Origins = _olrBusiness.GetOriginEFLRs(eflrRecords).Select(x => _olrBusiness.ConvertEFLRtoOrigin(x))
             };
         }
     }
