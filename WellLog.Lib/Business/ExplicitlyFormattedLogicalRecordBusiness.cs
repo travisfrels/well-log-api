@@ -68,5 +68,19 @@ namespace WellLog.Lib.Business
 
             return eflr;
         }
+
+        public IEnumerable<AttributeComponent> GetAttributesByLabel(ExplicitlyFormattedLogicalRecord eflr, string label)
+        {
+            if (eflr == null || eflr.Template == null || eflr.Objects == null) { yield break; }
+
+            var template = eflr.Template.FirstOrDefault(x => string.Compare(x.Label, label, true) == 0);
+            if (template == null || template.Descriptor == null) { yield break; }
+            if (template.Descriptor.IsInvariantAttribute) { yield break; }
+
+            foreach (var obj in eflr.Objects)
+            {
+                yield return obj.Attributes.FirstOrDefault(x => x.Template == template);
+            }
+        }
     }
 }
