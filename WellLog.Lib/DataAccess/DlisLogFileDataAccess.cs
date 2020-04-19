@@ -14,13 +14,15 @@ namespace WellLog.Lib.DataAccess
         private readonly IExplicitlyFormattedLogicalRecordBusiness _eflrBusiness;
         private readonly IFileHeaderLogicalRecordBusiness _fhlrBusiness;
         private readonly IOriginLogicalRecordBusiness _olrBusiness;
+        private readonly IParameterBusiness _paramBusiness;
 
-        public DlisLogFileDataAccess(IStorageUnitBusiness storageUnitBusiness, IExplicitlyFormattedLogicalRecordBusiness eflrBusiness, IFileHeaderLogicalRecordBusiness fhlrBusiness, IOriginLogicalRecordBusiness olrBusiness)
+        public DlisLogFileDataAccess(IStorageUnitBusiness storageUnitBusiness, IExplicitlyFormattedLogicalRecordBusiness eflrBusiness, IFileHeaderLogicalRecordBusiness fhlrBusiness, IOriginLogicalRecordBusiness olrBusiness, IParameterBusiness paramBusiness)
         {
             _storageUnitBusiness = storageUnitBusiness;
             _eflrBusiness = eflrBusiness;
             _fhlrBusiness = fhlrBusiness;
             _olrBusiness = olrBusiness;
+            _paramBusiness = paramBusiness;
         }
 
         public DlisLog Read(string fileName)
@@ -54,7 +56,8 @@ namespace WellLog.Lib.DataAccess
                 Label = storageUnit.Label,
                 EFLRs = eflrRecords.ToArray(),
                 FileHeader = _fhlrBusiness.ConvertEFLRtoFileHeader(_fhlrBusiness.GetFileHeaderEFLR(eflrRecords)),
-                Origins = _olrBusiness.GetOriginEFLRs(eflrRecords).Select(x => _olrBusiness.ConvertEFLRtoOrigin(x))
+                Origins = _olrBusiness.GetOriginEFLRs(eflrRecords).Select(x => _olrBusiness.ConvertEFLRtoOrigin(x)),
+                Parameters = _paramBusiness.GetParameterEFLR(eflrRecords).Select(x => _paramBusiness.ConvertEFLRtoParameter(x))
             };
         }
     }

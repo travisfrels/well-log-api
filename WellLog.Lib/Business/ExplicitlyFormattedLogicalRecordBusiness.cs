@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -95,6 +96,13 @@ namespace WellLog.Lib.Business
             var value = GetFirstValueByLabel(eflr, label);
             if (value == null) { return null; }
             return value.ToString().Trim();
+        }
+
+        public IEnumerable GetValueByLabel(ExplicitlyFormattedLogicalRecord eflr, string label)
+        {
+            var attribute = GetAttributesByLabel(eflr, label).FirstOrDefault();
+            if (attribute == null || attribute.Value == null) { return null; }
+            return attribute.Value;
         }
     }
 }

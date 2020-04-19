@@ -8,5 +8,6 @@ namespace WellLog.Lib.Models.DLIS
         public IEnumerable<ExplicitlyFormattedLogicalRecord> EFLRs { get; set; }
         public FileHeaderLogicalRecord FileHeader { get; set; }
         public IEnumerable<OriginLogicalRecord> Origins { get; set; }
+        public IEnumerable<Parameter> Parameters { get; set; }
     }
 }

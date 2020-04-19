@@ -62,6 +62,16 @@ namespace DLIS
                 _textWriter.WriteLine($"\tName Space Version : {origin.NameSpaceVersion}");
                 _textWriter.WriteLine();
             }
+
+            foreach (var param in dlisLog.Parameters)
+            {
+                _textWriter.WriteLine("Parameter");
+                _textWriter.WriteLine($"\tLong Name : {{ Origin: {param.LongName.Origin}; CopyNumber: {param.LongName.CopyNumber}; Identifier: {param.LongName.Identifier} }}");
+                _textWriter.WriteLine($"\tDimension : {param.Dimension}");
+                _textWriter.WriteLine($"\tAxis      : {{ Origin: {param.Axis.Origin}; CopyNumber: {param.Axis.CopyNumber}; Identifier: {param.Axis.Identifier} }}");
+                _textWriter.WriteLine($"\tZones     : {{ Origin: {param.Zones.Origin}; CopyNumber: {param.Zones.CopyNumber}; Identifier: {param.Zones.Identifier} }}");
+                _textWriter.WriteLine();
+            }
         }
     }
 }
