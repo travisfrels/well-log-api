@@ -1,33 +1,33 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using WellLog.Lib.Models.DLIS;
 
 namespace WellLog.Lib.Factories.DLIS
 {
-    public static class ComponentReaderFactory
+    public class ComponentReaderFactory : IComponentReaderFactory
     {
-        private static readonly Dictionary<byte, IComponentReader> _readers = new Dictionary<byte, IComponentReader>();
+        private readonly IServiceProvider _serviceProvider;
 
-        public static void RegisterReaders(IServiceProvider serviceProvider)
+        public ComponentReaderFactory(IServiceProvider serviceProvider)
         {
-            var attributeReader = (IComponentReader)serviceProvider.GetService<IAttributeComponentReader>();
-            var objectReader = (IComponentReader)serviceProvider.GetService<IObjectComponentReader>();
-            var setReader = (IComponentReader)serviceProvider.GetService<ISetComponentReader>();
-
-            _readers.Add(ComponentDescriptor.ABSENT_ATTRIBUTE_ROLE, attributeReader);
-            _readers.Add(ComponentDescriptor.ATTRIBUTE_ROLE, attributeReader);
-            _readers.Add(ComponentDescriptor.INVARIANT_ATTRIBUTE_ROLE, attributeReader);
-            _readers.Add(ComponentDescriptor.OBJECT_ROLE, objectReader);
-            _readers.Add(ComponentDescriptor.REDUNDANT_SET_ROLE, setReader);
-            _readers.Add(ComponentDescriptor.REPLACEMENT_SET_ROLE, setReader);
-            _readers.Add(ComponentDescriptor.SET_ROLE, setReader);
+            _serviceProvider = serviceProvider;
         }
 
-        public static IComponentReader GetReader(ComponentDescriptor descriptor)
+        public IComponentReader GetReader(ComponentDescriptor descriptor)
         {
             if (descriptor == null) { return null; }
-            return _readers[descriptor.Role];
+
+            return descriptor.Role switch
+            {
+                ComponentDescriptor.ABSENT_ATTRIBUTE_ROLE => (IComponentReader)_serviceProvider.GetService<IAttributeComponentReader>(),
+                ComponentDescriptor.ATTRIBUTE_ROLE => (IComponentReader)_serviceProvider.GetService<IAttributeComponentReader>(),
+                ComponentDescriptor.INVARIANT_ATTRIBUTE_ROLE => (IComponentReader)_serviceProvider.GetService<IAttributeComponentReader>(),
+                ComponentDescriptor.OBJECT_ROLE => (IComponentReader)_serviceProvider.GetService<IObjectComponentReader>(),
+                ComponentDescriptor.REDUNDANT_SET_ROLE => (IComponentReader)_serviceProvider.GetService<ISetComponentReader>(),
+                ComponentDescriptor.REPLACEMENT_SET_ROLE => (IComponentReader)_serviceProvider.GetService<ISetComponentReader>(),
+                ComponentDescriptor.SET_ROLE => (IComponentReader)_serviceProvider.GetService<ISetComponentReader>(),
+                _ => null,
+            };
         }
     }
 }

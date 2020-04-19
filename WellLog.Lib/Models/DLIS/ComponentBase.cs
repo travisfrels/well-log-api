@@ -4,7 +4,5 @@
     {
         public ComponentDescriptor Descriptor { get; set; }
         public long StartPosition { get; set; }
-        public ComponentBase Template { get; set; }
-
     }
 }
