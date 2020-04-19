@@ -14,24 +14,19 @@ namespace WellLog.Lib.Factories.DLIS
         public const byte DEFAULT_REP_CODE = 19;
         public const string DEFAULT_UNITS = "";
 
-        private readonly IIDENTReader _identReader;
-        private readonly IUVARIReader _uvariReader;
-        private readonly IUSHORTReader _ushortReader;
-        private readonly IUNITSReader _unitsReader;
+        private readonly IValueReaderFactory _valueReaderFactory;
 
-        public AttributeComponentReader(IIDENTReader identReader, IUVARIReader uvariReader, IUSHORTReader ushortReader, IUNITSReader unitsReader)
+        public AttributeComponentReader(IValueReaderFactory identReader)
         {
-            _identReader = identReader;
-            _uvariReader = uvariReader;
-            _ushortReader = ushortReader;
-            _unitsReader = unitsReader;
+            _valueReaderFactory = identReader;
         }
 
         public string ReadAttributeLabel(Stream s, ComponentDescriptor descriptor, AttributeComponent template = null)
         {
             if (s == null || s.IsAtEndOfStream()) { return null; }
 
-            if (descriptor.DoesAttributeHaveLabel) { return _identReader.ReadIDENT(s); }
+            var identReader = (IIDENTReader)_valueReaderFactory.GetReader(RepresentationCode.IDENT);
+            if (descriptor.DoesAttributeHaveLabel) { return identReader.ReadIDENT(s); }
             if (template == null) { return DEFAULT_LABEL; }
             return template.Label;
         }
@@ -40,7 +35,8 @@ namespace WellLog.Lib.Factories.DLIS
         {
             if (s == null || s.IsAtEndOfStream()) { return 0; }
 
-            if (descriptor.DoesAttributeHaveCount) { return _uvariReader.ReadUVARI(s); }
+            var uvariReader = (IUVARIReader)_valueReaderFactory.GetReader(RepresentationCode.UVARI);
+            if (descriptor.DoesAttributeHaveCount) { return uvariReader.ReadUVARI(s); }
             if (template == null) { return DEFAULT_COUNT; }
             return template.Count;
         }
@@ -49,7 +45,8 @@ namespace WellLog.Lib.Factories.DLIS
         {
             if (s == null || s.IsAtEndOfStream()) { return 0; }
 
-            if (descriptor.DoesAttributeHaveRepresentationCode) { return _ushortReader.ReadUSHORT(s); }
+            var ushortReader = (IUSHORTReader)_valueReaderFactory.GetReader(RepresentationCode.USHORT);
+            if (descriptor.DoesAttributeHaveRepresentationCode) { return ushortReader.ReadUSHORT(s); }
             if (template == null) { return DEFAULT_REP_CODE; }
             return template.RepresentationCode;
         }
@@ -58,7 +55,8 @@ namespace WellLog.Lib.Factories.DLIS
         {
             if (s == null || s.IsAtEndOfStream()) { return null; }
 
-            if (descriptor.DoesAttributeHaveUnits) { return _unitsReader.ReadUNITS(s); }
+            var unitsReader = (IUNITSReader)_valueReaderFactory.GetReader(RepresentationCode.UNITS);
+            if (descriptor.DoesAttributeHaveUnits) { return unitsReader.ReadUNITS(s); }
             if (template == null) { return DEFAULT_UNITS; }
             return template.Units;
         }
@@ -68,7 +66,7 @@ namespace WellLog.Lib.Factories.DLIS
             if (s == null || s.IsAtEndOfStream()) { return null; }
             if (!descriptor.DoesAttributeHaveValue) { return null; }
 
-            var valueReader = ValueReaderFactory.GetReader((RepresentationCode)repCode);
+            var valueReader = _valueReaderFactory.GetReader((RepresentationCode)repCode);
             if (valueReader == null) { throw new Exception($"no value reader found for representation code {repCode}"); }
             return valueReader.ReadValues(s, count);
         }

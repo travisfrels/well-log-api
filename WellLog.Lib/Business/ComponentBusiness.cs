@@ -9,10 +9,12 @@ namespace WellLog.Lib.Business
     public class ComponentBusiness : IComponentBusiness
     {
         private readonly IUSHORTReader _ushortReader;
+        private readonly IComponentReaderFactory _componentReaderFactory;
 
-        public ComponentBusiness(IUSHORTReader ushortReader)
+        public ComponentBusiness(IUSHORTReader ushortReader, IComponentReaderFactory componentReaderFactory)
         {
             _ushortReader = ushortReader;
+            _componentReaderFactory = componentReaderFactory;
         }
 
         public ComponentBase ReadComponent(Stream dlisStream, AttributeComponent template = null)
@@ -22,7 +24,7 @@ namespace WellLog.Lib.Business
             var startPosition = dlisStream.Position;
 
             var descriptor = new ComponentDescriptor(_ushortReader.ReadUSHORT(dlisStream));
-            var componentReader = ComponentReaderFactory.GetReader(descriptor);
+            var componentReader = _componentReaderFactory.GetReader(descriptor);
             if (componentReader == null) { throw new Exception($"no component reader found for role {descriptor.Role}"); }
 
             var component = componentReader.ReadComponent(dlisStream, descriptor, template);

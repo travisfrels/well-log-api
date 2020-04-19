@@ -15,10 +15,7 @@ namespace DLIS
             serviceCollection.AddSingleton(Console.Out);
             serviceCollection.AddScoped<IDlisLogPrinter, DlisLogPrinter>();
 
-            var serviceProvider = serviceCollection.BuildServiceProvider();
-            WellLogModule.InitFactories(serviceProvider);
-
-            return serviceProvider;
+            return serviceCollection.BuildServiceProvider();
         }
     }
 }
