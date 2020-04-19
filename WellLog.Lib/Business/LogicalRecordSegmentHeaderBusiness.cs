@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using WellLog.Lib.Factories.DLIS;
 using WellLog.Lib.Helpers;
 using WellLog.Lib.Models.DLIS;
 
@@ -6,6 +7,15 @@ namespace WellLog.Lib.Business
 {
     public class LogicalRecordSegmentHeaderBusiness : ILogicalRecordSegmentHeaderBusiness
     {
+        private readonly IUNORMReader _unormReader;
+        private readonly IUSHORTReader _ushortReader;
+
+        public LogicalRecordSegmentHeaderBusiness(IUNORMReader unormReader, IUSHORTReader ushortReader)
+        {
+            _unormReader = unormReader;
+            _ushortReader = ushortReader;
+        }
+
         public LogicalRecordSegmentHeader ReadLogicalRecordSegmentHeader(Stream dlisStream)
         {
             if (dlisStream == null) { return null; }
@@ -13,9 +23,9 @@ namespace WellLog.Lib.Business
 
             return new LogicalRecordSegmentHeader
             {
-                LogicalRecordSegmentLength = dlisStream.ReadUNORM(),
-                LogicalRecordSegmentAttributes = dlisStream.ReadUSHORT(),
-                LogicalRecordType = dlisStream.ReadUSHORT()
+                LogicalRecordSegmentLength = _unormReader.ReadUNORM(dlisStream),
+                LogicalRecordSegmentAttributes = _ushortReader.ReadUSHORT(dlisStream),
+                LogicalRecordType = _ushortReader.ReadUSHORT(dlisStream)
             };
         }
     }

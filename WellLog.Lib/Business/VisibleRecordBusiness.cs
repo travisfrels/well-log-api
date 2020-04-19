@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using WellLog.Lib.Factories.DLIS;
 using WellLog.Lib.Helpers;
 using WellLog.Lib.Models.DLIS;
 
@@ -8,10 +9,14 @@ namespace WellLog.Lib.Business
 {
     public class VisibleRecordBusiness : IVisibleRecordBusiness
     {
+        private readonly IUNORMReader _unormReader;
+        private readonly IUSHORTReader _ushortReader;
         private readonly ILogicalRecordSegmentBusiness _logicalRecordSegmentBusiness;
 
-        public VisibleRecordBusiness(ILogicalRecordSegmentBusiness logicalRecordSegmentBusiness)
+        public VisibleRecordBusiness(IUNORMReader unormReader, IUSHORTReader ushortReader, ILogicalRecordSegmentBusiness logicalRecordSegmentBusiness)
         {
+            _unormReader = unormReader;
+            _ushortReader = ushortReader;
             _logicalRecordSegmentBusiness = logicalRecordSegmentBusiness;
         }
 
@@ -21,9 +26,9 @@ namespace WellLog.Lib.Business
 
             var visibleRecord = new VisibleRecord
             {
-                Length = dlisStream.ReadUNORM(),
-                FormatVersionField1 = dlisStream.ReadUSHORT(),
-                FormatVersionField2 = dlisStream.ReadUSHORT()
+                Length = _unormReader.ReadUNORM(dlisStream),
+                FormatVersionField1 = _ushortReader.ReadUSHORT(dlisStream),
+                FormatVersionField2 = _ushortReader.ReadUSHORT(dlisStream)
             };
 
             if (visibleRecord.FormatVersionField1 != 255 || visibleRecord.FormatVersionField2 != 1)

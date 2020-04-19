@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using WellLog.Lib.Business;
+using WellLog.Lib.Factories.DLIS;
 using WellLog.Lib.Models.DLIS;
 
 namespace WellLog.Lib.Test.Business
@@ -9,12 +10,16 @@ namespace WellLog.Lib.Test.Business
     [TestFixture]
     public class LogicalRecordSegmentTrailerBusinessTests
     {
+        private USHORTReader _ushortReader;
+        private UNORMReader _unormReader;
         private LogicalRecordSegmentTrailerBusiness _logicalRecordSegmentTrailerBusiness;
 
         [SetUp]
         public void PerTestSetup()
         {
-            _logicalRecordSegmentTrailerBusiness = new LogicalRecordSegmentTrailerBusiness();
+            _ushortReader = new USHORTReader();
+            _unormReader = new UNORMReader();
+            _logicalRecordSegmentTrailerBusiness = new LogicalRecordSegmentTrailerBusiness(_ushortReader, _unormReader);
         }
 
         [Test]
@@ -102,7 +107,7 @@ namespace WellLog.Lib.Test.Business
 
             dlisStream.Seek(3, SeekOrigin.Current);
             var result = _logicalRecordSegmentTrailerBusiness.ReadLogicalRecordSegmentTrailer(dlisStream, logicalRecordSegmentHeader);
- 
+
             Assert.AreEqual(1, result.PadCount);
             Assert.AreEqual(1, result.Padding.Count());
             Assert.AreEqual(0, result.Checksum);

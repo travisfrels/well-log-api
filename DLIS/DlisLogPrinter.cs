@@ -14,19 +14,15 @@ namespace DLIS
             _textWriter = textWriter;
         }
 
-        public void PrintLasLog(StorageUnit storageUnit)
+        public void PrintLasLog(DlisLog dlisLog)
         {
-            if (storageUnit == null) { throw new ArgumentNullException(nameof(storageUnit)); }
+            if (dlisLog == null) { throw new ArgumentNullException(nameof(dlisLog)); }
 
-            _textWriter.WriteLine("Storage Unit Label");
-            _textWriter.WriteLine($"StorageUnitSequenceNumber: {storageUnit.Label.StorageUnitSequenceNumber}");
-            _textWriter.WriteLine($"DlisVersion: {storageUnit.Label.DlisVersion}");
-            _textWriter.WriteLine($"StorageUnitStructure: {storageUnit.Label.StorageUnitStructure}");
-            _textWriter.WriteLine($"MaximumRecordLength: {storageUnit.Label.MaximumRecordLength}");
-            _textWriter.WriteLine($"StorageSetIdentifier: {storageUnit.Label.StorageSetIdentifier}");
-            _textWriter.WriteLine();
-            _textWriter.WriteLine($"Visible Records: {storageUnit.VisibleRecords.Count()}");
-            _textWriter.WriteLine($"Logical Record Segments: {storageUnit.VisibleRecords.SelectMany(x => x.Segments).Count()}");
+            _textWriter.WriteLine($"EFLRs Found: {dlisLog.EFLRs.Count()}");
+            foreach (var eflr in dlisLog.EFLRs)
+            {
+                _textWriter.WriteLine($"\tSet: {{ Name: {eflr.Set.Name}, Type: {eflr.Set.Type} }}");
+            }
         }
     }
 }

@@ -4,6 +4,6 @@ namespace WellLog.Lib.DataAccess
 {
     public interface IDlisLogFileDataAccess
     {
-        StorageUnit Read(string fileName);
+        DlisLog Read(string fileName);
     }
 }
