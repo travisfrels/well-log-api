@@ -14,13 +14,6 @@ namespace WellLog.Lib.Business
         public const string ZONES_LABEL = "ZONES";
         public const string VALUES_LABEL = "VALUES";
 
-        private readonly IExplicitlyFormattedLogicalRecordBusiness _eflrBusiness;
-
-        public ParameterBusiness(IExplicitlyFormattedLogicalRecordBusiness eflrBusiness)
-        {
-            _eflrBusiness = eflrBusiness;
-        }
-
         public bool IsParameter(ExplicitlyFormattedLogicalRecord eflr)
         {
             if (eflr == null || eflr.Set == null) { return false; }
@@ -33,7 +26,7 @@ namespace WellLog.Lib.Business
             return eflrs.Where(x => IsParameter(x));
         }
 
-        public IEnumerable<Parameter> ConvertEFLRtoParameter(ExplicitlyFormattedLogicalRecord eflr)
+        public IEnumerable<Parameter> ConvertEFLRtoParameters(ExplicitlyFormattedLogicalRecord eflr)
         {
             if (eflr == null) { return null; }
             if (eflr.Set == null || eflr.Template == null || eflr.Objects == null) { return null; }

@@ -9,5 +9,6 @@ namespace WellLog.Lib.Models.DLIS
         public FileHeaderLogicalRecord FileHeader { get; set; }
         public IEnumerable<OriginLogicalRecord> Origins { get; set; }
         public IEnumerable<Parameter> Parameters { get; set; }
+        public IEnumerable<Channel> Channels { get; set; }
     }
 }

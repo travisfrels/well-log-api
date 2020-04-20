@@ -3,10 +3,10 @@ using WellLog.Lib.Models.DLIS;
 
 namespace WellLog.Lib.Business
 {
-    public interface IParameterBusiness
+    public interface IChannelBusiness
     {
-        bool IsParameter(ExplicitlyFormattedLogicalRecord eflr);
+        bool IsChannel(ExplicitlyFormattedLogicalRecord eflr);
         IEnumerable<ExplicitlyFormattedLogicalRecord> GetParameterEFLR(IEnumerable<ExplicitlyFormattedLogicalRecord> eflrs);
-        IEnumerable<Parameter> ConvertEFLRtoParameters(ExplicitlyFormattedLogicalRecord eflr);
+        IEnumerable<Channel> ConvertEFLRtoChannels(ExplicitlyFormattedLogicalRecord eflr);
     }
 }

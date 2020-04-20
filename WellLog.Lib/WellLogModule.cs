@@ -30,6 +30,7 @@ namespace WellLog.Lib
             serviceCollection.AddScoped<IFileHeaderLogicalRecordBusiness, FileHeaderLogicalRecordBusiness>();
             serviceCollection.AddScoped<IOriginLogicalRecordBusiness, OriginLogicalRecordBusiness>();
             serviceCollection.AddScoped<IParameterBusiness, ParameterBusiness>();
+            serviceCollection.AddScoped<IChannelBusiness, ChannelBusiness>();
 
             /* Validators */
             serviceCollection.AddScoped<ILasLogValidator, LasLogValidator>();

@@ -15,14 +15,24 @@ namespace WellLog.Lib.DataAccess
         private readonly IFileHeaderLogicalRecordBusiness _fhlrBusiness;
         private readonly IOriginLogicalRecordBusiness _olrBusiness;
         private readonly IParameterBusiness _paramBusiness;
+        private readonly IChannelBusiness _channelBusiness;
 
-        public DlisLogFileDataAccess(IStorageUnitBusiness storageUnitBusiness, IExplicitlyFormattedLogicalRecordBusiness eflrBusiness, IFileHeaderLogicalRecordBusiness fhlrBusiness, IOriginLogicalRecordBusiness olrBusiness, IParameterBusiness paramBusiness)
+        public DlisLogFileDataAccess
+        (
+            IStorageUnitBusiness storageUnitBusiness,
+            IExplicitlyFormattedLogicalRecordBusiness eflrBusiness,
+            IFileHeaderLogicalRecordBusiness fhlrBusiness,
+            IOriginLogicalRecordBusiness olrBusiness,
+            IParameterBusiness paramBusiness,
+            IChannelBusiness channelBusiness
+        )
         {
             _storageUnitBusiness = storageUnitBusiness;
             _eflrBusiness = eflrBusiness;
             _fhlrBusiness = fhlrBusiness;
             _olrBusiness = olrBusiness;
             _paramBusiness = paramBusiness;
+            _channelBusiness = channelBusiness;
         }
 
         public DlisLog Read(string fileName)
@@ -57,7 +67,8 @@ namespace WellLog.Lib.DataAccess
                 EFLRs = eflrRecords.ToArray(),
                 FileHeader = _fhlrBusiness.ConvertEFLRtoFileHeader(_fhlrBusiness.GetFileHeaderEFLR(eflrRecords)),
                 Origins = _olrBusiness.GetOriginEFLRs(eflrRecords).Select(x => _olrBusiness.ConvertEFLRtoOrigin(x)),
-                Parameters = _paramBusiness.GetParameterEFLR(eflrRecords).SelectMany(x => _paramBusiness.ConvertEFLRtoParameter(x))
+                Parameters = _paramBusiness.GetParameterEFLR(eflrRecords).SelectMany(x => _paramBusiness.ConvertEFLRtoParameters(x)),
+                Channels = _channelBusiness.GetParameterEFLR(eflrRecords).SelectMany(x => _channelBusiness.ConvertEFLRtoChannels(x))
             };
         }
     }
