@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using WellLog.Lib.Helpers;
 using WellLog.Lib.Models.DLIS;
 
 namespace WellLog.Lib.Business
@@ -32,21 +33,30 @@ namespace WellLog.Lib.Business
             return eflrs.Where(x => IsParameter(x));
         }
 
-        public Parameter ConvertEFLRtoParameter(ExplicitlyFormattedLogicalRecord eflr)
+        public IEnumerable<Parameter> ConvertEFLRtoParameter(ExplicitlyFormattedLogicalRecord eflr)
         {
             if (eflr == null) { return null; }
             if (eflr.Set == null || eflr.Template == null || eflr.Objects == null) { return null; }
 
             if (!IsParameter(eflr)) { return null; }
 
-            return new Parameter
+            var objects = eflr.Objects.ToArray();
+            var numParameters = objects.Length;
+            var parameters = new Parameter[numParameters];
+            for (var i = 0; i < numParameters; i++)
             {
-                LongName = (OBNAME)_eflrBusiness.GetFirstValueByLabel(eflr, LONG_NAME_LABEL),
-                Dimension = (uint)_eflrBusiness.GetFirstValueByLabel(eflr, LONG_NAME_LABEL),
-                Axis = (OBNAME)_eflrBusiness.GetFirstValueByLabel(eflr, LONG_NAME_LABEL),
-                Zones = (OBNAME)_eflrBusiness.GetFirstValueByLabel(eflr, LONG_NAME_LABEL)/*,
-                Values = _eflrBusiness.GetValueByLabel(eflr, LONG_NAME_LABEL)*/
-            };
+                var obj = objects[i];
+                parameters[i] = new Parameter
+                {
+                    LongName = (string)obj.Attributes.Where(x => string.Compare(x.Label, LONG_NAME_LABEL, true) == 0).First().Value.First(),
+                    Dimension = (uint?)obj.Attributes.Where(x => string.Compare(x.Label, DIMENSION_LABEL, true) == 0).First().Value.First(),
+                    Zones = (OBNAME)obj.Attributes.Where(x => string.Compare(x.Label, ZONES_LABEL, true) == 0).First().Value.First(),
+                    Values = obj.Attributes.Where(x => string.Compare(x.Label, VALUES_LABEL, true) == 0).First().Value
+                };
+            }
+
+            //var nonNullValues = parameters.Where(x => x.Values.Count() > 1).ToArray();
+            return parameters;
         }
     }
 }

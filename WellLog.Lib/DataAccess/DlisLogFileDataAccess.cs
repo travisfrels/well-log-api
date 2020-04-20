@@ -57,7 +57,7 @@ namespace WellLog.Lib.DataAccess
                 EFLRs = eflrRecords.ToArray(),
                 FileHeader = _fhlrBusiness.ConvertEFLRtoFileHeader(_fhlrBusiness.GetFileHeaderEFLR(eflrRecords)),
                 Origins = _olrBusiness.GetOriginEFLRs(eflrRecords).Select(x => _olrBusiness.ConvertEFLRtoOrigin(x)),
-                Parameters = _paramBusiness.GetParameterEFLR(eflrRecords).Select(x => _paramBusiness.ConvertEFLRtoParameter(x))
+                Parameters = _paramBusiness.GetParameterEFLR(eflrRecords).SelectMany(x => _paramBusiness.ConvertEFLRtoParameter(x))
             };
         }
     }

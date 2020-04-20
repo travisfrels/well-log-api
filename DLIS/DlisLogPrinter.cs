@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using WellLog.Lib.Helpers;
 using WellLog.Lib.Models.DLIS;
 
 namespace DLIS
@@ -66,10 +67,11 @@ namespace DLIS
             foreach (var param in dlisLog.Parameters)
             {
                 _textWriter.WriteLine("Parameter");
-                _textWriter.WriteLine($"\tLong Name : {{ Origin: {param.LongName.Origin}; CopyNumber: {param.LongName.CopyNumber}; Identifier: {param.LongName.Identifier} }}");
+                _textWriter.WriteLine($"\tLong Name : {param.LongName}");
                 _textWriter.WriteLine($"\tDimension : {param.Dimension}");
-                _textWriter.WriteLine($"\tAxis      : {{ Origin: {param.Axis.Origin}; CopyNumber: {param.Axis.CopyNumber}; Identifier: {param.Axis.Identifier} }}");
-                _textWriter.WriteLine($"\tZones     : {{ Origin: {param.Zones.Origin}; CopyNumber: {param.Zones.CopyNumber}; Identifier: {param.Zones.Identifier} }}");
+                _textWriter.WriteLine($"\tAxis      : {{ Origin: {param.Axis?.Origin}; CopyNumber: {param.Axis?.CopyNumber}; Identifier: {param.Axis?.Identifier} }}");
+                _textWriter.WriteLine($"\tZones     : {{ Origin: {param.Zones?.Origin}; CopyNumber: {param.Zones?.CopyNumber}; Identifier: {param.Zones?.Identifier} }}");
+                _textWriter.WriteLine($"\tValues    : {string.Join(", ", param.Values.SerializeValues().ToArray())}");
                 _textWriter.WriteLine();
             }
         }

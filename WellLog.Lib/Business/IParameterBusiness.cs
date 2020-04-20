@@ -7,6 +7,6 @@ namespace WellLog.Lib.Business
     {
         bool IsParameter(ExplicitlyFormattedLogicalRecord eflr);
         IEnumerable<ExplicitlyFormattedLogicalRecord> GetParameterEFLR(IEnumerable<ExplicitlyFormattedLogicalRecord> eflrs);
-        Parameter ConvertEFLRtoParameter(ExplicitlyFormattedLogicalRecord eflr);
+        IEnumerable<Parameter> ConvertEFLRtoParameter(ExplicitlyFormattedLogicalRecord eflr);
     }
 }
