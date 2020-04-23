@@ -16,6 +16,7 @@ namespace WellLog.Lib.DataAccess
         private readonly IOriginLogicalRecordBusiness _olrBusiness;
         private readonly IParameterBusiness _paramBusiness;
         private readonly IChannelBusiness _channelBusiness;
+        private readonly IToolBusiness _toolBusiness;
 
         public DlisLogFileDataAccess
         (
@@ -24,7 +25,8 @@ namespace WellLog.Lib.DataAccess
             IFileHeaderLogicalRecordBusiness fhlrBusiness,
             IOriginLogicalRecordBusiness olrBusiness,
             IParameterBusiness paramBusiness,
-            IChannelBusiness channelBusiness
+            IChannelBusiness channelBusiness,
+            IToolBusiness toolBusiness
         )
         {
             _storageUnitBusiness = storageUnitBusiness;
@@ -33,6 +35,7 @@ namespace WellLog.Lib.DataAccess
             _olrBusiness = olrBusiness;
             _paramBusiness = paramBusiness;
             _channelBusiness = channelBusiness;
+            _toolBusiness = toolBusiness;
         }
 
         public DlisLog Read(string fileName)
@@ -68,7 +71,8 @@ namespace WellLog.Lib.DataAccess
                 FileHeader = _fhlrBusiness.ConvertEFLRtoFileHeader(_fhlrBusiness.GetFileHeaderEFLR(eflrRecords)),
                 Origins = _olrBusiness.GetOriginEFLRs(eflrRecords).Select(x => _olrBusiness.ConvertEFLRtoOrigin(x)),
                 Parameters = _paramBusiness.GetParameterEFLR(eflrRecords).SelectMany(x => _paramBusiness.ConvertEFLRtoParameters(x)),
-                Channels = _channelBusiness.GetParameterEFLR(eflrRecords).SelectMany(x => _channelBusiness.ConvertEFLRtoChannels(x))
+                Channels = _channelBusiness.GetChannelEFLR(eflrRecords).SelectMany(x => _channelBusiness.ConvertEFLRtoChannels(x)),
+                Tools = _toolBusiness.GetToolEFLR(eflrRecords).SelectMany(x => _toolBusiness.ConvertEFLRtoTools(x))
             };
         }
     }

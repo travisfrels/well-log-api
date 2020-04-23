@@ -17,13 +17,20 @@ namespace WellLog.Lib.Business
         public const string ELEMENT_LIMIT_LABEL = "ELEMENT-LIMIT";
         public const string SOURCE_LABEL = "SOURCE";
 
+        private readonly IObjectComponentBusiness _objectComponentBusiness;
+
+        public ChannelBusiness(IObjectComponentBusiness objectComponentBusiness)
+        {
+            _objectComponentBusiness = objectComponentBusiness;
+        }
+
         public bool IsChannel(ExplicitlyFormattedLogicalRecord eflr)
         {
             if (eflr == null || eflr.Set == null) { return false; }
             return string.Compare(eflr.Set.Type, CHANNEL_TYPE, true) == 0;
         }
 
-        public IEnumerable<ExplicitlyFormattedLogicalRecord> GetParameterEFLR(IEnumerable<ExplicitlyFormattedLogicalRecord> eflrs)
+        public IEnumerable<ExplicitlyFormattedLogicalRecord> GetChannelEFLR(IEnumerable<ExplicitlyFormattedLogicalRecord> eflrs)
         {
             if (eflrs == null) { return null; }
             return eflrs.Where(x => IsChannel(x));
@@ -44,13 +51,13 @@ namespace WellLog.Lib.Business
                 var obj = objects[i];
                 channels[i] = new Channel
                 {
-                    LongName = (string)obj.Attributes.Where(x => string.Compare(x.Label, LONG_NAME_LABEL, true) == 0).First().Value.First(),
-                    Properties = (string)obj.Attributes.Where(x => string.Compare(x.Label, PROPERTIES_LABEL, true) == 0).First().Value.First(),
-                    RepresentationCode = (byte?)obj.Attributes.Where(x => string.Compare(x.Label, REPRESENTATION_CODE_LABEL, true) == 0).First().Value.First(),
-                    Units = (string)obj.Attributes.Where(x => string.Compare(x.Label, UNITS_LABEL, true) == 0).First().Value.First(),
-                    Dimension = (uint?)obj.Attributes.Where(x => string.Compare(x.Label, DIMENSION_LABEL, true) == 0).First().Value.First(),
-                    ElementLimit = (uint?)obj.Attributes.Where(x => string.Compare(x.Label, ELEMENT_LIMIT_LABEL, true) == 0).First().Value.First(),
-                    Source = (OBJREF)obj.Attributes.Where(x => string.Compare(x.Label, SOURCE_LABEL, true) == 0).First().Value
+                    LongName = (string)_objectComponentBusiness.GetFirstAttributeValueByLabel(obj, LONG_NAME_LABEL),
+                    Properties = (string)_objectComponentBusiness.GetFirstAttributeValueByLabel(obj, PROPERTIES_LABEL),
+                    RepresentationCode = (byte?)_objectComponentBusiness.GetFirstAttributeValueByLabel(obj, REPRESENTATION_CODE_LABEL),
+                    Units = (string)_objectComponentBusiness.GetFirstAttributeValueByLabel(obj, UNITS_LABEL),
+                    Dimension = (uint?)_objectComponentBusiness.GetFirstAttributeValueByLabel(obj, DIMENSION_LABEL),
+                    ElementLimit = (uint?)_objectComponentBusiness.GetFirstAttributeValueByLabel(obj, ELEMENT_LIMIT_LABEL),
+                    Source = (OBJREF)_objectComponentBusiness.GetFirstAttributeValueByLabel(obj, SOURCE_LABEL)
                 };
             }
 

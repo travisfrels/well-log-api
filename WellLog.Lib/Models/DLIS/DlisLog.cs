@@ -10,5 +10,6 @@ namespace WellLog.Lib.Models.DLIS
         public IEnumerable<OriginLogicalRecord> Origins { get; set; }
         public IEnumerable<Parameter> Parameters { get; set; }
         public IEnumerable<Channel> Channels { get; set; }
+        public IEnumerable<Tool> Tools { get; set; }
     }
 }

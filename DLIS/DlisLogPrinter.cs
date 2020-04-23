@@ -81,6 +81,17 @@ namespace DLIS
                 _textWriter.WriteLine($"\tRep Code  : {((RepresentationCode)channel.RepresentationCode)}");
                 _textWriter.WriteLine();
             }
+
+            foreach (var tool in dlisLog.Tools)
+            {
+                _textWriter.WriteLine("Tool");
+                _textWriter.WriteLine($"\tDescription    : {tool.Description}");
+                _textWriter.WriteLine($"\tTrademark Name : {tool.TrademarkName}");
+                _textWriter.WriteLine($"\tGeneric Name   : {tool.GenericName}");
+                _textWriter.WriteLine($"\tParts          : {tool.Parts}");
+                _textWriter.WriteLine($"\tStatus         : {tool.Status}");
+                _textWriter.WriteLine();
+            }
         }
     }
 }

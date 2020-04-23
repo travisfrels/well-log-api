@@ -14,6 +14,13 @@ namespace WellLog.Lib.Business
         public const string ZONES_LABEL = "ZONES";
         public const string VALUES_LABEL = "VALUES";
 
+        private readonly IObjectComponentBusiness _objectComponentBusiness;
+
+        public ParameterBusiness(IObjectComponentBusiness objectComponentBusiness)
+        {
+            _objectComponentBusiness = objectComponentBusiness;
+        }
+
         public bool IsParameter(ExplicitlyFormattedLogicalRecord eflr)
         {
             if (eflr == null || eflr.Set == null) { return false; }
@@ -41,10 +48,10 @@ namespace WellLog.Lib.Business
                 var obj = objects[i];
                 parameters[i] = new Parameter
                 {
-                    LongName = (string)obj.Attributes.Where(x => string.Compare(x.Label, LONG_NAME_LABEL, true) == 0).First().Value.First(),
-                    Dimension = (uint?)obj.Attributes.Where(x => string.Compare(x.Label, DIMENSION_LABEL, true) == 0).First().Value.First(),
-                    Zones = (OBNAME)obj.Attributes.Where(x => string.Compare(x.Label, ZONES_LABEL, true) == 0).First().Value.First(),
-                    Values = obj.Attributes.Where(x => string.Compare(x.Label, VALUES_LABEL, true) == 0).First().Value
+                    LongName = (string)_objectComponentBusiness.GetFirstAttributeValueByLabel(obj, LONG_NAME_LABEL),
+                    Dimension = (uint?)_objectComponentBusiness.GetFirstAttributeValueByLabel(obj, DIMENSION_LABEL),
+                    Zones = (OBNAME)_objectComponentBusiness.GetFirstAttributeValueByLabel(obj, ZONES_LABEL),
+                    Values = _objectComponentBusiness.GetAttributeValueByLabel(obj, VALUES_LABEL)
                 };
             }
 
